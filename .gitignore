@@ -1,0 +1,56 @@
+# ──────────────────────────────────────────────────────────────────────────────
+# Flutter / Dart
+# ──────────────────────────────────────────────────────────────────────────────
+.dart_tool/
+.packages
+.flutter-plugins
+.flutter-plugins-dependencies
+pubspec.lock
+
+# Build artifacts
+build/
+.build/
+
+# Generated files
+*.g.dart
+*.freezed.dart
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Android
+# ──────────────────────────────────────────────────────────────────────────────
+android/.gradle/
+android/local.properties
+android/key.properties
+android/app/google-services.json
+**/android/**/GeneratedPluginRegistrant.java
+**/android/**/GeneratedPluginRegistrant.kt
+
+# ──────────────────────────────────────────────────────────────────────────────
+# iOS / macOS
+# ──────────────────────────────────────────────────────────────────────────────
+ios/Pods/
+ios/.symlinks/
+ios/Flutter/App.framework
+ios/Flutter/Flutter.framework
+ios/Flutter/Generated.xcconfig
+ios/Flutter/flutter_export_environment.sh
+macos/Pods/
+macos/.symlinks/
+**/ios/**/GeneratedPluginRegistrant.h
+**/ios/**/GeneratedPluginRegistrant.m
+
+# ──────────────────────────────────────────────────────────────────────────────
+# IDE & Editor
+# ──────────────────────────────────────────────────────────────────────────────
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+.DS_Store
+Thumbs.db
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Project-specific: excluded content folders
+# ──────────────────────────────────────────────────────────────────────────────
+Keynotes/
