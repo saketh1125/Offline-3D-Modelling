@@ -5,7 +5,7 @@
 .packages
 .flutter-plugins
 .flutter-plugins-dependencies
-pubspec.lock
+
 
 # Build artifacts
 build/
@@ -54,3 +54,38 @@ Thumbs.db
 # Project-specific: excluded content folders
 # ──────────────────────────────────────────────────────────────────────────────
 Keynotes/
+
+
+# =========================
+# Unity
+# =========================
+
+unity/3DBuilderRuntime/[Ll]ibrary/
+unity/3DBuilderRuntime/[Tt]emp/
+unity/3DBuilderRuntime/[Oo]bj/
+unity/3DBuilderRuntime/[Ll]ogs/
+unity/3DBuilderRuntime/UserSettings/
+
+# Unity Android export
+android/unityLibrary/
+android/unity_export/
+
+# Android build outputs
+android/.gradle/
+android/local.properties
+android/app/build/
+android/build/
+
+# Unity crash / logs
+sysinfo.txt
+
+# Visual Studio / Rider C# extras
+*.csproj
+*.unityproj
+*.sln
+*.suo
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd

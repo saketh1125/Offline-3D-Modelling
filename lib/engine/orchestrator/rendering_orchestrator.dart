@@ -131,7 +131,7 @@ class RenderingOrchestrator {
 
     // Guard: reject duplicate / concurrent load.
     if (_lifecycle.currentState == EngineState.rendering) {
-      final message =
+      const message =
           'Orchestrator: loadScene rejected — engine is already rendering.';
       _logger.warning(message);
       throw EngineException(
