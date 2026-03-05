@@ -22,12 +22,27 @@ namespace ThreeDBuilder.Geometry
                 return null;
             }
 
-            // Route standard primitives to dedicated generator classes Let future implementations map appropriately.
+            // Route primitives to dedicated geometry generator classes.
             switch (primitive.ToLowerInvariant())
             {
                 case "cube":
                     return CubeGenerator.Generate();
-                
+
+                case "sphere":
+                    return SphereGenerator.Generate();
+
+                case "cylinder":
+                    return CylinderGenerator.Generate();
+
+                case "plane":
+                    return PlaneGenerator.Generate();
+
+                case "dome":
+                    return DomeGenerator.Generate();
+
+                case "arch":
+                    return ArchGenerator.Generate();
+
                 default:
                     Debug.LogWarning($"MeshFactory: Unsupported primitive '{primitive}'. Returning null mesh.");
                     return null;

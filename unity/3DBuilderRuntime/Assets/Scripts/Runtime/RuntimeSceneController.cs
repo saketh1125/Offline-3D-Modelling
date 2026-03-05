@@ -16,6 +16,19 @@ namespace ThreeDBuilder.Runtime
             string testJson = @"
             {
               ""schema_version"": ""1.0"",
+              ""environment"": {
+                ""backgroundColor"": [0.1, 0.2, 0.3]
+              },
+              ""camera"": {
+                ""position"": [5.0, 5.0, -10.0],
+                ""lookAt"": [0.0, 0.0, 0.0]
+              },
+              ""lighting"": {
+                ""type"": ""directional"",
+                ""color"": [1.0, 0.95, 0.9],
+                ""intensity"": 1.2,
+                ""direction"": [1.0, -1.0, 1.0]
+              },
               ""materials"": [
                 {
                   ""id"": ""red"",
@@ -31,6 +44,10 @@ namespace ThreeDBuilder.Runtime
                     ""position"": [0, 0, 0],
                     ""rotation"": [0, 0, 0],
                     ""scale"": [1, 1, 1]
+                  },
+                  ""repeat"": {
+                    ""grid"": [5, 5],
+                    ""spacing"": [2.0, 2.0]
                   }
                 }
               ]
