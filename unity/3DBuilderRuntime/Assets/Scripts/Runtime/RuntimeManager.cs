@@ -2,6 +2,8 @@ using UnityEngine;
 using ThreeDBuilder.Protocol;
 using ThreeDBuilder.Core;
 using ThreeDBuilder.Communication;
+using ThreeDBuilder.Scene;
+using ThreeDBuilder.Builders;
 
 
 using CoreLogger = ThreeDBuilder.Core.Logger;
@@ -34,6 +36,9 @@ namespace ThreeDBuilder.Runtime
         private bool _isInitialized = false;
         private bool _isDisposed = false;
 
+        private SceneInterpreter _sceneInterpreter;
+        private SceneBuilder _sceneBuilder;
+
         /// <summary>
         /// Exposed for FlutterBridge to cache a reference instead of using
         /// FindObjectOfType on every call.
@@ -55,7 +60,10 @@ namespace ThreeDBuilder.Runtime
             }
 
             Instance = this;
-            CoreLogger.Info("RuntimeManager: Awake. Instance registered.");
+            _sceneInterpreter = new SceneInterpreter();
+            _sceneBuilder = new SceneBuilder();
+
+            CoreLogger.Info("RuntimeManager: Awake. Instance registered and pipeline components initialized.");
         }
 
         /// <summary>
@@ -249,13 +257,40 @@ namespace ThreeDBuilder.Runtime
             // Emit loading event
             EmitEvent(EngineEventType.SceneLoading, envelope.request_id);
 
-            // TODO: Parse envelope.payload as scene JSON and build mesh/materials
             CoreLogger.Info($"RuntimeManager: Scene payload size: " +
                         $"{(string.IsNullOrEmpty(envelope.payload) ? 0 : envelope.payload.Length)} chars");
 
-            // For now, immediately emit scene_ready (will be async with real implementation)
-            CoreLogger.Info("RuntimeManager: Scene loaded (stub).");
-            EmitEvent(EngineEventType.SceneReady, envelope.request_id);
+            try
+            {
+                // Step 1: Parse JSON into our plain-data SceneModel mapping
+                SceneModel parsedScene = _sceneInterpreter.ParseScene(envelope.payload);
+
+                if (parsedScene != null)
+                {
+                    CoreLogger.Info($"RuntimeManager: Parsed JSON successfully. Found {parsedScene.objects.Count} objects.");
+
+                    // Step 2: Use SceneBuilder to translate the model into Unity standard GameObjects
+                    GameObject generatedRoot = _sceneBuilder.BuildScene(parsedScene);
+
+                    if (generatedRoot != null)
+                    {
+                        // Attach the resulting hierarchy to this executing MonoBehaviour
+                        generatedRoot.transform.SetParent(this.transform);
+                        CoreLogger.Info("RuntimeManager: Scene built successfully!");
+                        EmitEvent(EngineEventType.SceneReady, envelope.request_id);
+                    }
+                    else
+                    {
+                        CoreLogger.Error("RuntimeManager: BuildScene returned null root object.");
+                        EmitErrorEvent(envelope.request_id, "BUILD_FAILED", "Scene built successfully but root object is null.");
+                    }
+                }
+            }
+            catch (System.Exception ex)
+            {
+                CoreLogger.Error("RuntimeManager: Failed to build procedural scene.", ex);
+                EmitErrorEvent(envelope.request_id, "SCENE_BUILD_FAILED", ex.Message);
+            }
         }
 
         private void HandleClearScene(CommandEnvelope envelope)
