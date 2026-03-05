@@ -1,4 +1,4 @@
-import 'package:on_device_3d_builder/core/logging/app_logger.dart';
+﻿import 'package:on_device_3d_builder/core/logging/app_logger.dart';
 
 /// Represents the possible states of the rendering engine.
 enum EngineState {
@@ -72,7 +72,8 @@ class EngineLifecycleManager {
         'Current state: $_currentState',
       );
     }
-    _logger.info('Engine state: error -> uninitialized (recovery reset)');
+    _logger.info(
+        'Engine state: error -> uninitialized (recovery reset)');
     _currentState = EngineState.uninitialized;
   }
 

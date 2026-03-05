@@ -1,5 +1,7 @@
-import 'dart:async';
+﻿import 'dart:async';
+import 'dart:convert';
 
+import 'package:flutter/services.dart';
 import 'package:on_device_3d_builder/core/logging/app_logger.dart';
 import 'package:on_device_3d_builder/engine/contract/engine_event.dart';
 import 'package:on_device_3d_builder/engine/contract/render_engine.dart';
@@ -7,113 +9,186 @@ import 'package:on_device_3d_builder/engine/protocol/command_envelope.dart';
 import 'package:on_device_3d_builder/engine/protocol/event_envelope.dart';
 import 'package:on_device_3d_builder/engine/protocol/protocol_constants.dart';
 
-/// Skeleton adapter for the Unity rendering engine.
+/// Production adapter that connects to the Unity rendering engine
+/// via a [MethodChannel] bridge.
 ///
-/// This adapter implements [RenderEngine] and will eventually bind to
-/// a `MethodChannel` / `EventChannel` to communicate with the Unity
-/// runtime embedded as a platform view.
+/// **Flutter → Unity**: Commands are serialized to JSON and sent via
+/// `sendCommand` on the MethodChannel. The Android `MainActivity`
+/// forwards them to `UnityPlayer.UnitySendMessage`.
 ///
-/// **Current status: SKELETON — not connected to Unity.**
-/// All methods throw [UnimplementedError] until the platform channel
-/// binding is implemented in Level 2 Phase 2.
-///
-/// The class demonstrates usage of [CommandEnvelope] and [EventEnvelope]
-/// to show how commands will be sent and events will be parsed.
+/// **Unity → Flutter**: Unity calls the static `onUnityEvent` method
+/// on `MainActivity`, which invokes `onUnityEvent` on the MethodChannel.
+/// This adapter listens for those invocations, deserializes the JSON
+/// into an [EventEnvelope], and emits an [EngineEvent] on [events].
 class UnityEngineAdapter implements RenderEngine {
+  static const String _channelName = 'com.sankalp.unity.bridge';
+
   final AppLogger _logger;
-
-  // TODO(unity): Replace with MethodChannel('on_device_3d_builder/engine')
-  // static const _channel = MethodChannel('on_device_3d_builder/engine');
-
-  // TODO(unity): Replace with EventChannel('on_device_3d_builder/events')
-  // static const _eventChannel = EventChannel('on_device_3d_builder/events');
+  final MethodChannel _channel;
 
   final StreamController<EngineEvent> _eventController =
       StreamController<EngineEvent>.broadcast();
 
-  UnityEngineAdapter(this._logger);
+  bool _disposed = false;
+
+  UnityEngineAdapter(this._logger)
+      : _channel = const MethodChannel(_channelName) {
+    // Listen for Unity → Flutter event callbacks.
+    _channel.setMethodCallHandler(_handleMethodCall);
+    _logger.info(
+        'UnityAdapter: MethodChannel "$_channelName" initialized.');
+  }
+
+  // ---------------------------------------------------------------------------
+  // RenderEngine contract
+  // ---------------------------------------------------------------------------
 
   @override
   Stream<EngineEvent> get events => _eventController.stream;
 
   @override
   Future<void> initialize() async {
-    final envelope = CommandEnvelope.create(EngineCommand.initialize);
-    _logger.info('UnityAdapter: Sending command -> ${envelope.command.value} '
-        '[${envelope.requestId}]');
-
-    // TODO(unity): Send via MethodChannel
-    // final result = await _channel.invokeMethod('sendCommand', envelope.toMap());
-
-    throw UnimplementedError(
-      'UnityEngineAdapter.initialize() is not yet connected to Unity. '
-      'Command envelope prepared: $envelope',
-    );
+    _guardDisposed('initialize');
+    await _sendCommand(EngineCommand.initialize);
   }
 
   @override
   Future<void> loadScene(String sceneJson) async {
-    final envelope = CommandEnvelope.create(
+    _guardDisposed('loadScene');
+    await _sendCommand(
       EngineCommand.loadScene,
       payload: {'scene_json': sceneJson},
-    );
-    _logger.info('UnityAdapter: Sending command -> ${envelope.command.value} '
-        '[${envelope.requestId}]');
-
-    // TODO(unity): Send via MethodChannel
-    throw UnimplementedError(
-      'UnityEngineAdapter.loadScene() is not yet connected to Unity. '
-      'Command envelope prepared: $envelope',
     );
   }
 
   @override
   Future<void> clearScene() async {
-    final envelope = CommandEnvelope.create(EngineCommand.clearScene);
-    _logger.info('UnityAdapter: Sending command -> ${envelope.command.value} '
-        '[${envelope.requestId}]');
-
-    // TODO(unity): Send via MethodChannel
-    throw UnimplementedError(
-      'UnityEngineAdapter.clearScene() is not yet connected to Unity. '
-      'Command envelope prepared: $envelope',
-    );
+    _guardDisposed('clearScene');
+    await _sendCommand(EngineCommand.clearScene);
   }
 
   @override
   Future<void> dispose() async {
-    final envelope = CommandEnvelope.create(EngineCommand.dispose);
-    _logger.info('UnityAdapter: Sending command -> ${envelope.command.value} '
-        '[${envelope.requestId}]');
+    if (_disposed) {
+      _logger.warning('UnityAdapter: Already disposed, ignoring.');
+      return;
+    }
+    _disposed = true;
 
+    // Send dispose command to Unity (best-effort).
+    try {
+      await _sendCommand(EngineCommand.dispose);
+    } catch (e) {
+      _logger.error('UnityAdapter: Error sending dispose command: $e');
+    }
+
+    // Tear down the method call handler and event stream.
+    _channel.setMethodCallHandler(null);
     await _eventController.close();
-
-    // TODO(unity): Send via MethodChannel, then clean up native resources
-    throw UnimplementedError(
-      'UnityEngineAdapter.dispose() is not yet connected to Unity. '
-      'Command envelope prepared: $envelope',
-    );
+    _logger.info('UnityAdapter: Disposed.');
   }
 
   // ---------------------------------------------------------------------------
-  // Event Handling (future: called by EventChannel listener)
+  // Flutter → Unity: command sending
   // ---------------------------------------------------------------------------
 
-  /// Parses a raw event map from Unity and emits it as an [EngineEvent].
-  ///
-  /// This method will be called by the `EventChannel` listener once
-  /// Unity integration is active. It validates the wire format using
-  /// [EventEnvelope.fromMap] and converts it to an [EngineEvent].
-  void handleRawEvent(Map<String, dynamic> rawEvent) {
-    final envelope = EventEnvelope.fromMap(rawEvent); // validates strictly
-    _logger.info('UnityAdapter: Received event -> ${envelope.event.value} '
-        '[${envelope.requestId}]');
+  /// Serializes a [CommandEnvelope] to JSON and sends it to Unity
+  /// via the MethodChannel's `sendCommand` method.
+  Future<void> _sendCommand(
+    EngineCommand command, {
+    Map<String, dynamic>? payload,
+  }) async {
+    final envelope = CommandEnvelope.create(command, payload: payload);
+    final json = jsonEncode(envelope.toMap());
 
-    if (!_eventController.isClosed) {
-      _eventController.add(EngineEvent(
-        type: envelope.event.value,
-        payload: envelope.payload,
-      ));
+    _logger.info(
+      'UnityAdapter: Sending ${command.value} [${envelope.requestId}]',
+    );
+
+    try {
+      await _channel.invokeMethod<void>('sendCommand', {'json': json});
+    } on PlatformException catch (e) {
+      _logger.error(
+        'UnityAdapter: PlatformException sending ${command.value}: '
+        '${e.code} — ${e.message}',
+      );
+      rethrow;
+    } on MissingPluginException {
+      _logger.error(
+        'UnityAdapter: No handler registered for sendCommand. '
+        'Is the Android bridge configured?',
+      );
+      rethrow;
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // Unity → Flutter: event receiving
+  // ---------------------------------------------------------------------------
+
+  /// Handles incoming method calls from the Android MethodChannel.
+  ///
+  /// Only `onUnityEvent` is expected. All other method names are ignored
+  /// with a [MissingPluginException] returned to the platform.
+  Future<dynamic> _handleMethodCall(MethodCall call) async {
+    if (call.method != 'onUnityEvent') {
+      _logger.warning(
+        'UnityAdapter: Unknown method invoked from platform: ${call.method}',
+      );
+      throw MissingPluginException(
+        'UnityEngineAdapter does not handle method: ${call.method}',
+      );
+    }
+
+    final rawJson = call.arguments;
+    if (rawJson == null || rawJson is! String || rawJson.isEmpty) {
+      _logger.warning(
+        'UnityAdapter: Received onUnityEvent with null/empty argument.',
+      );
+      return;
+    }
+
+    try {
+      final map = jsonDecode(rawJson) as Map<String, dynamic>;
+      final envelope = EventEnvelope.fromMap(map);
+
+      _logger.info(
+        'UnityAdapter: Received ${envelope.event.value} '
+        '[${envelope.requestId}]',
+      );
+
+      if (!_eventController.isClosed) {
+        _eventController.add(EngineEvent(
+          type: envelope.event.value,
+          payload: envelope.payload,
+        ));
+      }
+    } catch (e) {
+      _logger.error('UnityAdapter: Failed to parse Unity event: $e');
+
+      // Emit a generic error event so the orchestrator can react.
+      if (!_eventController.isClosed) {
+        _eventController.add(EngineEvent(
+          type: EngineEventType.error.value,
+          payload: {
+            'code': 'EVENT_PARSE_FAILED',
+            'message': e.toString(),
+            'raw': rawJson,
+          },
+        ));
+      }
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // Guards
+  // ---------------------------------------------------------------------------
+
+  void _guardDisposed(String method) {
+    if (_disposed) {
+      throw StateError(
+        'UnityEngineAdapter.$method() called after dispose.',
+      );
     }
   }
 }

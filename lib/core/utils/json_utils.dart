@@ -1,4 +1,4 @@
-import 'dart:convert';
+﻿import 'dart:convert';
 
 class JsonUtils {
   static Map<String, dynamic> decode(String jsonString) {

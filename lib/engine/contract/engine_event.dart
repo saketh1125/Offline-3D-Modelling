@@ -1,4 +1,4 @@
-class EngineEvent {
+﻿class EngineEvent {
   final String type;
   final Map<String, dynamic>? payload;
   final DateTime timestamp;

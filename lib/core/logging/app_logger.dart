@@ -1,4 +1,4 @@
-import 'package:on_device_3d_builder/core/config/app_config.dart';
+﻿import 'package:on_device_3d_builder/core/config/app_config.dart';
 
 enum LogLevel {
   info,

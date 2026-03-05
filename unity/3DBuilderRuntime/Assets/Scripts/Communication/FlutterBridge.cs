@@ -1,6 +1,8 @@
 using ThreeDBuilder.Core;
 using ThreeDBuilder.Protocol;
 
+using CoreLogger = ThreeDBuilder.Core.Logger;
+
 namespace ThreeDBuilder.Communication
 {
     /// <summary>
@@ -26,7 +28,7 @@ namespace ThreeDBuilder.Communication
         {
             if (string.IsNullOrEmpty(eventJson))
             {
-                Logger.Warning("FlutterBridge.SendToFlutter: Attempted to send null/empty JSON.");
+                CoreLogger.Warning("FlutterBridge.SendToFlutter: Attempted to send null/empty JSON.");
                 return;
             }
 
@@ -43,7 +45,7 @@ namespace ThreeDBuilder.Communication
             //   [DllImport("__Internal")] static extern void sendToFlutter(string json);
             //   sendToFlutter(eventJson);
 
-            Logger.Info($"FlutterBridge.SendToFlutter: {eventJson}");
+            CoreLogger.Info($"FlutterBridge.SendToFlutter: {eventJson}");
         }
 
         /// <summary>
@@ -61,20 +63,20 @@ namespace ThreeDBuilder.Communication
                 // Guard null/empty before accessing .Length
                 if (string.IsNullOrEmpty(commandJson))
                 {
-                    Logger.Error("FlutterBridge.OnCommandReceived: Received null or empty JSON.");
+                    CoreLogger.Error("FlutterBridge.OnCommandReceived: Received null or empty JSON.");
                     // Attempt to emit error event if RuntimeManager is available.
                     TryEmitError(null, "INVALID_COMMAND_JSON",
                         "FlutterBridge received null or empty command JSON.");
                     return;
                 }
 
-                Logger.Info($"FlutterBridge.OnCommandReceived: ({commandJson.Length} chars)");
+                CoreLogger.Info($"FlutterBridge.OnCommandReceived: ({commandJson.Length} chars)");
 
                 // Use cached Instance instead of FindObjectOfType for performance.
                 var manager = Runtime.RuntimeManager.Instance;
                 if (manager == null)
                 {
-                    Logger.Error("FlutterBridge: RuntimeManager.Instance is null — not in scene.");
+                    CoreLogger.Error("FlutterBridge: RuntimeManager.Instance is null — not in scene.");
                     TryEmitError(null, "RUNTIME_NOT_FOUND",
                         "RuntimeManager is not available in the current scene.");
                     return;
@@ -85,7 +87,7 @@ namespace ThreeDBuilder.Communication
             catch (System.Exception e)
             {
                 // Outermost catch — never let exceptions escape to native caller.
-                Logger.Error("FlutterBridge.OnCommandReceived: Unhandled exception.", e);
+                CoreLogger.Error("FlutterBridge.OnCommandReceived: Unhandled exception.", e);
             }
         }
 
@@ -110,7 +112,7 @@ namespace ThreeDBuilder.Communication
             }
             catch (System.Exception e)
             {
-                Logger.Error("FlutterBridge.TryEmitError: Failed to emit fallback error.", e);
+                CoreLogger.Error("FlutterBridge.TryEmitError: Failed to emit fallback error.", e);
             }
         }
     }

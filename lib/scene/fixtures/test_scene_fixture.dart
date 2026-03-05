@@ -1,4 +1,4 @@
-import 'dart:convert';
+﻿import 'dart:convert';
 
 /// Provides a minimal, schema-compliant test scene JSON for development.
 ///

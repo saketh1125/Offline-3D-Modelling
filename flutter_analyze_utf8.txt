@@ -1,0 +1,4 @@
+﻿Analyzing 3D-Gen...                                             
+
+  error - Undefined name 'CoreLogger' - lib\main.dart:16:3 - undefined_identifier
+

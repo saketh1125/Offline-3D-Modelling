@@ -1,4 +1,4 @@
-import 'package:on_device_3d_builder/engine/protocol/protocol_constants.dart';
+﻿import 'package:on_device_3d_builder/engine/protocol/protocol_constants.dart';
 
 /// An immutable command envelope sent from Flutter → Unity.
 ///

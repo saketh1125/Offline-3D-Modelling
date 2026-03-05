@@ -1,4 +1,4 @@
-/// Protocol version and type-safe enums for the Flutter ↔ Unity wire format.
+﻿/// Protocol version and type-safe enums for the Flutter ↔ Unity wire format.
 ///
 /// All commands sent to Unity and events received from Unity must use
 /// these constant values. Unknown commands or events must be rejected.

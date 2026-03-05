@@ -1,4 +1,4 @@
-import 'package:on_device_3d_builder/engine/contract/engine_event.dart';
+﻿import 'package:on_device_3d_builder/engine/contract/engine_event.dart';
 
 /// Abstract contract for any rendering engine implementation.
 ///

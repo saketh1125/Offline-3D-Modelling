@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:on_device_3d_builder/engine/lifecycle/engine_lifecycle_manager.dart';
 import 'package:on_device_3d_builder/engine/orchestrator/rendering_orchestrator.dart';
 import 'package:on_device_3d_builder/features/scene_host/engine_container.dart';

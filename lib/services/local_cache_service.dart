@@ -1,4 +1,4 @@
-class LocalCacheService {
+﻿class LocalCacheService {
   Future<void> save(String key, dynamic value) async {
     // Implement cache saving logic
   }

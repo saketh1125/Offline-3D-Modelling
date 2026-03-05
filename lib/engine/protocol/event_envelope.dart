@@ -1,4 +1,4 @@
-import 'package:on_device_3d_builder/core/errors/engine_exception.dart';
+﻿import 'package:on_device_3d_builder/core/errors/engine_exception.dart';
 import 'package:on_device_3d_builder/engine/protocol/protocol_constants.dart';
 
 /// An immutable event envelope received from Unity → Flutter.

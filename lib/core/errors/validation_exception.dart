@@ -1,4 +1,4 @@
-class ValidationException implements Exception {
+﻿class ValidationException implements Exception {
   final String message;
   final String fieldName;
   final String? reason;

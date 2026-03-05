@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:on_device_3d_builder/core/config/app_config.dart';
 import 'package:on_device_3d_builder/core/logging/app_logger.dart';
 import 'package:on_device_3d_builder/engine/adapters/mock_engine_adapter.dart';

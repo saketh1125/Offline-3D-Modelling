@@ -1,4 +1,4 @@
-import 'package:on_device_3d_builder/scene/models/scene_model.dart';
+﻿import 'package:on_device_3d_builder/scene/models/scene_model.dart';
 
 class SceneRepository {
   Future<SceneModel?> getScene(String id) async {

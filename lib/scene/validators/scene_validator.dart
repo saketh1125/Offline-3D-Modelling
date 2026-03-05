@@ -1,4 +1,4 @@
-import 'package:on_device_3d_builder/core/errors/validation_exception.dart';
+﻿import 'package:on_device_3d_builder/core/errors/validation_exception.dart';
 
 /// Strict JSON schema validator for Scene Schema v1.0.
 ///

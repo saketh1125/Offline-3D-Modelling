@@ -1,4 +1,4 @@
-import 'dart:async';
+﻿import 'dart:async';
 import 'dart:convert';
 
 import 'package:on_device_3d_builder/core/errors/engine_exception.dart';
@@ -246,7 +246,8 @@ class RenderingOrchestrator {
         if (!_eventRelay.isClosed) _eventRelay.add(event);
       },
       onError: (Object error) {
-        _logger.error('Orchestrator: Engine event stream error.', error);
+        _logger.error(
+            'Orchestrator: Engine event stream error.', error);
         _tryTransitionTo(EngineState.error);
       },
     );
@@ -282,7 +283,8 @@ class RenderingOrchestrator {
         break;
 
       default:
-        _logger.info('Orchestrator: Unhandled event type: ${event.type}');
+        _logger.info(
+            'Orchestrator: Unhandled event type: ${event.type}');
     }
   }
 
@@ -310,7 +312,8 @@ class RenderingOrchestrator {
     try {
       _lifecycle.transitionTo(state);
     } on StateError catch (e) {
-      _logger.warning('Orchestrator: Could not transition to $state: $e');
+      _logger.warning(
+          'Orchestrator: Could not transition to $state: $e');
     }
   }
 

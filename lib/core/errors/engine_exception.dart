@@ -1,4 +1,4 @@
-class EngineException implements Exception {
+﻿class EngineException implements Exception {
   final String message;
   final String code;
   final Map<String, dynamic>? metadata;
