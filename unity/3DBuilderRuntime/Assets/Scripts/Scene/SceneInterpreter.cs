@@ -63,6 +63,13 @@ namespace ThreeDBuilder.Scene
                 }
             }
 
+            // Procedural macro-expansion: If a city schema was passed, inflate it into explicit standard objects
+            if (model.city != null)
+            {
+                var cityObjects = ThreeDBuilder.Procedural.CityGenerator.GenerateCity(model.city);
+                model.objects.AddRange(cityObjects);
+            }
+
             return model;
         }
     }

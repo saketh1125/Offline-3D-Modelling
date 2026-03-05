@@ -20,8 +20,15 @@ namespace ThreeDBuilder.Runtime
                 ""backgroundColor"": [0.1, 0.2, 0.3]
               },
               ""camera"": {
-                ""position"": [5.0, 5.0, -10.0],
+                ""position"": [0.0, 20.0, -20.0],
                 ""lookAt"": [0.0, 0.0, 0.0]
+              },
+              ""city"": {
+                ""grid_size"": [10, 10],
+                ""block_spacing"": 3.0,
+                ""building_height_range"": [2.0, 8.0],
+                ""building_width"": 2.0,
+                ""road_width"": 1.0
               },
               ""lighting"": {
                 ""type"": ""directional"",
@@ -79,6 +86,12 @@ namespace ThreeDBuilder.Runtime
             {
                 // Ensure failures during the parsing interpretation logic don't silently fail visually
                 Debug.LogError($"Procedural Engine Error: Failed to bootstrap procedural scene: {ex.Message}\n{ex.StackTrace}");
+            }
+
+            // Inject Orbit Camera dynamically to Camera.main to meet execution constraints seamlessly
+            if (Camera.main != null && Camera.main.gameObject.GetComponent<OrbitCameraController>() == null)
+            {
+                Camera.main.gameObject.AddComponent<OrbitCameraController>();
             }
         }
     }

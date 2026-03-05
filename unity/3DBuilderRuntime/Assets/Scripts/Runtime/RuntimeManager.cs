@@ -38,6 +38,7 @@ namespace ThreeDBuilder.Runtime
 
         private SceneInterpreter _sceneInterpreter;
         private SceneBuilder _sceneBuilder;
+        private GameObject _currentSceneRoot;
 
         /// <summary>
         /// Exposed for FlutterBridge to cache a reference instead of using
@@ -276,6 +277,8 @@ namespace ThreeDBuilder.Runtime
                     {
                         // Attach the resulting hierarchy to this executing MonoBehaviour
                         generatedRoot.transform.SetParent(this.transform);
+                        _currentSceneRoot = generatedRoot;
+                        
                         CoreLogger.Info("RuntimeManager: Scene built successfully!");
                         EmitEvent(EngineEventType.SceneReady, envelope.request_id);
                     }
@@ -316,10 +319,63 @@ namespace ThreeDBuilder.Runtime
             _isDisposed = true;
             _isInitialized = false;
 
-            // TODO: Release native resources, destroy spawned objects
+            if (_currentSceneRoot != null)
+            {
+                Destroy(_currentSceneRoot);
+                _currentSceneRoot = null;
+            }
 
             CoreLogger.Info("RuntimeManager: Disposed.");
             // Note: no event emitted after dispose — Flutter orchestrator handles this.
+        }
+
+        // ─────────────────────────────────────────────────────────────────
+        // Procedural Scene Regeneration
+        // ─────────────────────────────────────────────────────────────────
+
+        /// <summary>
+        /// Clears the existing procedural scene hierarchy entirely and mathematically rebuilds 
+        /// it parsing the new JSON payload natively. Exposed publicly bypassing the 
+        /// protocol event handler for direct testing / runtime integration if required by host.
+        /// </summary>
+        public void RegenerateScene(string jsonScene)
+        {
+            CoreLogger.Info("RuntimeManager: RegenerateScene requested. Clearing old hierarchy.");
+
+            if (_currentSceneRoot != null)
+            {
+                Destroy(_currentSceneRoot);
+                _currentSceneRoot = null;
+            }
+
+            try
+            {
+                SceneModel parsedScene = _sceneInterpreter.ParseScene(jsonScene);
+
+                if (parsedScene != null)
+                {
+                    GameObject generatedRoot = _sceneBuilder.BuildScene(parsedScene);
+
+                    if (generatedRoot != null)
+                    {
+                        generatedRoot.transform.SetParent(this.transform);
+                        _currentSceneRoot = generatedRoot;
+
+                        CoreLogger.Info($"RuntimeManager: Scene regenerated successfully with {parsedScene.objects.Count} base objects.");
+                        EmitEvent(EngineEventType.SceneReady, "REGENERATE_SCENE");
+                    }
+                    else
+                    {
+                        CoreLogger.Error("RuntimeManager: BuildScene returned null root object during regeneration.");
+                        EmitErrorEvent("REGENERATE_SCENE", "BUILD_FAILED", "Scene regeneration failed (null root).");
+                    }
+                }
+            }
+            catch (System.Exception ex)
+            {
+                CoreLogger.Error("RuntimeManager: Error processing RegenerateScene payload.", ex);
+                EmitErrorEvent("REGENERATE_SCENE", "SCENE_REGENERATION_FAILED", ex.Message);
+            }
         }
 
         // ─────────────────────────────────────────────────────────────────

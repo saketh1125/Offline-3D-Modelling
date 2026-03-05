@@ -14,6 +14,7 @@ namespace ThreeDBuilder.Scene
         public EnvironmentModel environment;    // Optional global environment settings
         public CameraModel camera;              // Optional camera settings
         public LightingModel lighting;          // Optional main lighting settings
+        public CityModel city;                  // Optional procedural city parameters
         public List<MaterialModel> materials;
         public List<ObjectModel> objects;
     }
@@ -22,6 +23,16 @@ namespace ThreeDBuilder.Scene
     public class EnvironmentModel
     {
         public float[] backgroundColor;
+    }
+
+    [Serializable]
+    public class CityModel
+    {
+        public int[] grid_size;            // [columns, rows]
+        public float block_spacing;        // Distance between blocks
+        public float[] building_height_range; // [minHeight, maxHeight]
+        public float building_width;       // Width/depth of a building footprint
+        public float road_width;           // Width of the road separating blocks
     }
 
     [Serializable]
