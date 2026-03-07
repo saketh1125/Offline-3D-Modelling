@@ -26,6 +26,7 @@ namespace ThreeDBuilder.Materials
             // Create a new Material using Unity's built-in Standard shader
             Material material = new Material(Shader.Find("Standard"));
             material.name = string.IsNullOrWhiteSpace(materialModel.id) ? "ProceduralMaterial" : materialModel.id;
+            material.enableInstancing = true; // Enable GPU instancing for identical object batching
 
             // Extract baseColor float array and convert to Unity Color
             if (materialModel.baseColor != null && materialModel.baseColor.Length >= 3)

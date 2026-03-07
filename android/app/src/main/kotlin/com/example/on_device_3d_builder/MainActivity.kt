@@ -3,6 +3,7 @@ package com.example.on_device_3d_builder
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import com.example.on_device_3d_builder.diagnostics.AndroidBridgeLogger
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
@@ -50,6 +51,8 @@ class MainActivity : FlutterActivity() {
                 Log.w(TAG, "onUnityEvent: received null/empty JSON, ignoring.")
                 return
             }
+            AndroidBridgeLogger.log("onUnityEvent received: $json")
+            Log.i(TAG, "[DIAG] onUnityEvent received: $json")
 
             val ch = channel
             if (ch == null) {
@@ -62,6 +65,7 @@ class MainActivity : FlutterActivity() {
                 try {
                     ch.invokeMethod("onUnityEvent", json)
                 } catch (e: Exception) {
+                    AndroidBridgeLogger.logError("Failed to invoke Flutter method onUnityEvent", e)
                     Log.e(TAG, "onUnityEvent: failed to invoke Flutter method.", e)
                 }
             }
@@ -70,6 +74,9 @@ class MainActivity : FlutterActivity() {
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
+        
+        AndroidBridgeLogger.initialize(this)
+        AndroidBridgeLogger.log("============== SESSION START (Android Native) ==============")
 
         val methodChannel = MethodChannel(
             flutterEngine.dartExecutor.binaryMessenger,
@@ -121,8 +128,10 @@ class MainActivity : FlutterActivity() {
                 UNITY_METHOD,
                 json
             )
+            AndroidBridgeLogger.log("Forwarded command to Unity (UnitySendMessage): $UNITY_GAMEOBJECT.$UNITY_METHOD")
             result.success(null)
         } catch (e: Exception) {
+            AndroidBridgeLogger.logError("handleSendCommand: UnitySendMessage failed", e)
             Log.e(TAG, "handleSendCommand: UnitySendMessage failed.", e)
             result.error("UNITY_SEND_FAILED", e.message, null)
         }

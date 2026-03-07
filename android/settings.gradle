@@ -26,9 +26,19 @@ plugins {
 include ':app'
 include ':launcher', ':unityLibrary'
 
+def flutterSdkPath = {
+    def properties = new Properties()
+    file("local.properties").withInputStream { properties.load(it) }
+    def path = properties.getProperty("flutter.sdk")
+    assert path != null, "flutter.sdk not set in local.properties"
+    return path.replace('\\', '/')
+}()
+
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
     repositories {
+        maven { url "$flutterSdkPath/bin/cache/artifacts/engine/android" }
+        maven { url "https://storage.googleapis.com/download.flutter.io" }
         google()
         mavenCentral()
         flatDir {

@@ -1,5 +1,6 @@
 using ThreeDBuilder.Core;
 using ThreeDBuilder.Protocol;
+using ThreeDBuilder.Core.Diagnostics;
 
 using CoreLogger = ThreeDBuilder.Core.Logger;
 
@@ -26,26 +27,29 @@ namespace ThreeDBuilder.Communication
         /// </summary>
         public static void SendToFlutter(string eventJson)
         {
+            UnityDiagnosticsLogger.Log($"FlutterBridge.SendToFlutter: {eventJson}");
             if (string.IsNullOrEmpty(eventJson))
             {
                 CoreLogger.Warning("FlutterBridge.SendToFlutter: Attempted to send null/empty JSON.");
                 return;
             }
 
-            // TODO(bridge): Replace with native messaging:
-            //
-            // Android:
-            //   using (var unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer"))
-            //   using (var activity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity"))
-            //   {
-            //       activity.Call("onUnityEvent", eventJson);
-            //   }
-            //
-            // iOS:
-            //   [DllImport("__Internal")] static extern void sendToFlutter(string json);
-            //   sendToFlutter(eventJson);
+            #if UNITY_ANDROID && !UNITY_EDITOR
+            try
+            {
+                using (var unityPlayer = new UnityEngine.AndroidJavaClass("com.unity3d.player.UnityPlayer"))
+                using (var activity = unityPlayer.GetStatic<UnityEngine.AndroidJavaObject>("currentActivity"))
+                {
+                    activity.CallStatic("onUnityEvent", eventJson);
+                }
+            }
+            catch (System.Exception ex)
+            {
+                CoreLogger.Error("FlutterBridge.SendToFlutter: JNI CallStatic failed. ", ex);
+            }
+            #endif
 
-            CoreLogger.Info($"FlutterBridge.SendToFlutter: {eventJson}");
+            UnityEngine.Debug.Log($"[DIAG] FlutterBridge sending event={eventJson}");
         }
 
         /// <summary>
@@ -58,6 +62,7 @@ namespace ThreeDBuilder.Communication
         /// <param name="commandJson">Raw JSON command envelope string.</param>
         public static void OnCommandReceived(string commandJson)
         {
+            UnityDiagnosticsLogger.Log($"FlutterBridge.OnCommandReceived: {commandJson}");
             try
             {
                 // Guard null/empty before accessing .Length

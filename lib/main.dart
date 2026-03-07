@@ -1,12 +1,11 @@
 ﻿import 'package:flutter/material.dart';
+import 'package:on_device_3d_builder/controllers/scene_controller.dart';
 import 'package:on_device_3d_builder/core/config/app_config.dart';
 import 'package:on_device_3d_builder/core/logging/app_logger.dart';
-import 'package:on_device_3d_builder/engine/adapters/mock_engine_adapter.dart';
-import 'package:on_device_3d_builder/engine/lifecycle/engine_lifecycle_manager.dart';
-import 'package:on_device_3d_builder/engine/orchestrator/rendering_orchestrator.dart';
-import 'package:on_device_3d_builder/features/scene_host/scene_host_screen.dart';
+import 'package:on_device_3d_builder/engine/adapters/unity_engine_adapter.dart';
+import 'package:on_device_3d_builder/ui/scene_editor_page.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Initialize core services.
@@ -15,26 +14,27 @@ void main() {
 
   logger.info('Application Starting: ${config.appName}');
 
-  // Wire the rendering pipeline.
-  final engine = MockEngineAdapter(logger);
-  final lifecycle = EngineLifecycleManager(logger);
-  final orchestrator = RenderingOrchestrator(
-    engine: engine,
-    lifecycle: lifecycle,
-    logger: logger,
-  );
+  // Wire the rendering pipeline via native Unity bindings
+  final engine = UnityEngineAdapter(logger);
 
-  runApp(OnDevice3DBuilderApp(config: config, orchestrator: orchestrator));
+  // Wait for Unity engine to establish its platform view
+  await engine.initialize();
+
+  // Create our interaction controller
+  final sceneController = SceneController(engine: engine);
+
+  runApp(
+      OnDevice3DBuilderApp(config: config, sceneController: sceneController));
 }
 
 class OnDevice3DBuilderApp extends StatelessWidget {
   final AppConfig config;
-  final RenderingOrchestrator orchestrator;
+  final SceneController sceneController;
 
   const OnDevice3DBuilderApp({
     super.key,
     required this.config,
-    required this.orchestrator,
+    required this.sceneController,
   });
 
   @override
@@ -48,7 +48,7 @@ class OnDevice3DBuilderApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      home: SceneHostScreen(orchestrator: orchestrator),
+      home: SceneEditorPage(sceneController: sceneController),
       debugShowCheckedModeBanner: config.isDebugMode,
     );
   }

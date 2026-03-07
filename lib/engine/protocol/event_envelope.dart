@@ -1,4 +1,6 @@
-﻿import 'package:on_device_3d_builder/core/errors/engine_exception.dart';
+﻿import 'dart:convert';
+import 'package:flutter/foundation.dart';
+import 'package:on_device_3d_builder/core/errors/engine_exception.dart';
 import 'package:on_device_3d_builder/engine/protocol/protocol_constants.dart';
 
 /// An immutable event envelope received from Unity → Flutter.
@@ -88,7 +90,20 @@ class EventEnvelope {
 
     // --- Parse optional fields ---
     final requestId = map['request_id'] as String?;
-    final payload = map['payload'] as Map<String, dynamic>?;
+
+    // Safely parse the C# stringified payload into a Dart Map
+    final rawPayload = map['payload'];
+    Map<String, dynamic>? payload;
+
+    if (rawPayload is String && rawPayload.isNotEmpty) {
+      try {
+        payload = jsonDecode(rawPayload) as Map<String, dynamic>;
+      } catch (_) {}
+    } else if (rawPayload is Map<String, dynamic>) {
+      payload = rawPayload;
+    }
+
+    debugPrint('[DIAG] Decoded event map: $map');
 
     return EventEnvelope._(
       protocolVersion: version,

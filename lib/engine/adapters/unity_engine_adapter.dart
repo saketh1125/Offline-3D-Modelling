@@ -1,7 +1,7 @@
-﻿import 'dart:async';
+import 'dart:async';
 import 'dart:convert';
-
 import 'package:flutter/services.dart';
+import 'package:on_device_3d_builder/core/diagnostics/diagnostics_logger.dart';
 import 'package:on_device_3d_builder/core/logging/app_logger.dart';
 import 'package:on_device_3d_builder/engine/contract/engine_event.dart';
 import 'package:on_device_3d_builder/engine/contract/render_engine.dart';
@@ -30,13 +30,13 @@ class UnityEngineAdapter implements RenderEngine {
       StreamController<EngineEvent>.broadcast();
 
   bool _disposed = false;
+  bool _unityReady = false;
 
   UnityEngineAdapter(this._logger)
       : _channel = const MethodChannel(_channelName) {
     // Listen for Unity → Flutter event callbacks.
     _channel.setMethodCallHandler(_handleMethodCall);
-    _logger.info(
-        'UnityAdapter: MethodChannel "$_channelName" initialized.');
+    _logger.info('UnityAdapter: MethodChannel "$_channelName" initialized.');
   }
 
   // ---------------------------------------------------------------------------
@@ -49,6 +49,17 @@ class UnityEngineAdapter implements RenderEngine {
   @override
   Future<void> initialize() async {
     _guardDisposed('initialize');
+    
+    // Initialize file-based diagnostics logic
+    await FlutterDiagnosticsLogger().initialize();
+    FlutterDiagnosticsLogger().log("============== SESSION START ==============");
+
+    _logger.info(
+        "UnityAdapter: Waiting 500ms for MethodChannel native registration...");
+   
+    // Added safety buffer ensuring Kotlin MainActivity mounts its native listeners completely.
+    await Future.delayed(const Duration(milliseconds: 500));
+    
     await _sendCommand(EngineCommand.initialize);
   }
 
@@ -98,6 +109,10 @@ class UnityEngineAdapter implements RenderEngine {
     EngineCommand command, {
     Map<String, dynamic>? payload,
   }) async {
+    if (!_unityReady && command != EngineCommand.initialize) {
+      throw StateError("Unity runtime not ready yet");
+    }
+
     final envelope = CommandEnvelope.create(command, payload: payload);
     final json = jsonEncode(envelope.toMap());
 
@@ -131,6 +146,12 @@ class UnityEngineAdapter implements RenderEngine {
   /// Only `onUnityEvent` is expected. All other method names are ignored
   /// with a [MissingPluginException] returned to the platform.
   Future<dynamic> _handleMethodCall(MethodCall call) async {
+    _logger.info("RAW UNITY EVENT: ${call.arguments}");
+    FlutterDiagnosticsLogger().log("Received Platform Call: ${call.method}");
+    if (call.arguments != null) {
+      FlutterDiagnosticsLogger().log("Payload String: ${call.arguments.toString()}");
+    }
+
     if (call.method != 'onUnityEvent') {
       _logger.warning(
         'UnityAdapter: Unknown method invoked from platform: ${call.method}',
@@ -153,9 +174,14 @@ class UnityEngineAdapter implements RenderEngine {
       final envelope = EventEnvelope.fromMap(map);
 
       _logger.info(
-        'UnityAdapter: Received ${envelope.event.value} '
+        '[DIAG] UnityAdapter: Received ${envelope.event.value} '
         '[${envelope.requestId}]',
       );
+
+      if (envelope.event.value == "initialized") {
+        _unityReady = true;
+        _logger.info("Unity runtime ready");
+      }
 
       if (!_eventController.isClosed) {
         _eventController.add(EngineEvent(

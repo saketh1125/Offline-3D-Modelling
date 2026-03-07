@@ -1,0 +1,314 @@
+Initialized native services in: C:\Users\saket\.gradle\native
+Initialized jansi services in: C:\Users\saket\.gradle\native
+Received JVM installation metadata from 'C:\Program Files\Eclipse Adoptium\jdk-21.0.7.6-hotspot': {JAVA_HOME=C:\Program Files\Eclipse Adoptium\jdk-21.0.7.6-hotspot, JAVA_VERSION=21.0.7, JAVA_VENDOR=Eclipse Adoptium, RUNTIME_NAME=OpenJDK Runtime Environment, RUNTIME_VERSION=21.0.7+6-LTS, VM_NAME=OpenJDK 64-Bit Server VM, VM_VERSION=21.0.7+6-LTS, VM_VENDOR=Eclipse Adoptium, OS_ARCH=amd64}
+Found daemon DaemonInfo{pid=36036, address=[96082ae9-e34a-4c27-9840-bc7d3e0ae756 port:58164, addresses:[/127.0.0.1]], state=Idle, lastBusy=1771778771970, context=DefaultDaemonContext[uid=a2b37414-e3b4-4c9e-86ee-ca01f2428c1c,javaHome=C:\Program Files\Eclipse Adoptium\jdk-21.0.7.6-hotspot,daemonRegistryDir=C:\Users\saket\.gradle\daemon,pid=36036,idleTimeout=10800000,priority=NORMAL,applyInstrumentationAgent=true,daemonOpts=--add-opens=java.base/java.util=ALL-UNNAMED,--add-opens=java.base/java.lang=ALL-UNNAMED,--add-opens=java.base/java.lang.invoke=ALL-UNNAMED,--add-opens=java.prefs/java.util.prefs=ALL-UNNAMED,--add-opens=java.base/java.nio.charset=ALL-UNNAMED,--add-opens=java.base/java.net=ALL-UNNAMED,--add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED,-Xmx4096M,-Dfile.encoding=utf8,-Duser.country=US,-Duser.language=en,-Duser.variant]} however its context does not match the desired criteria.
+At least one daemon option is different.
+Wanted: DefaultDaemonContext[uid=null,javaHome=C:\Program Files\Eclipse Adoptium\jdk-21.0.7.6-hotspot,daemonRegistryDir=C:\Users\saket\.gradle\daemon,pid=11408,idleTimeout=null,priority=NORMAL,applyInstrumentationAgent=true,daemonOpts=--add-opens=java.base/java.util=ALL-UNNAMED,--add-opens=java.base/java.lang=ALL-UNNAMED,--add-opens=java.base/java.lang.invoke=ALL-UNNAMED,--add-opens=java.prefs/java.util.prefs=ALL-UNNAMED,--add-opens=java.base/java.nio.charset=ALL-UNNAMED,--add-opens=java.base/java.net=ALL-UNNAMED,--add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED,-Xmx4096M,-Dfile.encoding=UTF-8,-Duser.country=US,-Duser.language=en,-Duser.variant]
+Actual: DefaultDaemonContext[uid=a2b37414-e3b4-4c9e-86ee-ca01f2428c1c,javaHome=C:\Program Files\Eclipse Adoptium\jdk-21.0.7.6-hotspot,daemonRegistryDir=C:\Users\saket\.gradle\daemon,pid=36036,idleTimeout=10800000,priority=NORMAL,applyInstrumentationAgent=true,daemonOpts=--add-opens=java.base/java.util=ALL-UNNAMED,--add-opens=java.base/java.lang=ALL-UNNAMED,--add-opens=java.base/java.lang.invoke=ALL-UNNAMED,--add-opens=java.prefs/java.util.prefs=ALL-UNNAMED,--add-opens=java.base/java.nio.charset=ALL-UNNAMED,--add-opens=java.base/java.net=ALL-UNNAMED,--add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED,-Xmx4096M,-Dfile.encoding=utf8,-Duser.country=US,-Duser.language=en,-Duser.variant]
+
+  Looking for a different daemon...
+Found daemon DaemonInfo{pid=28536, address=[bca91246-ef00-448b-8b8c-4b4530b78f2b port:51709, addresses:[/127.0.0.1]], state=Idle, lastBusy=1772781800385, context=DefaultDaemonContext[uid=a6b7c447-2868-45a4-a974-544993d125ea,javaHome=C:\Program Files\Android\Android Studio\jbr,daemonRegistryDir=C:\Users\saket\.gradle\daemon,pid=28536,idleTimeout=10800000,priority=NORMAL,applyInstrumentationAgent=true,daemonOpts=--add-opens=java.base/java.util=ALL-UNNAMED,--add-opens=java.base/java.lang=ALL-UNNAMED,--add-opens=java.base/java.lang.invoke=ALL-UNNAMED,--add-opens=java.prefs/java.util.prefs=ALL-UNNAMED,--add-opens=java.base/java.nio.charset=ALL-UNNAMED,--add-opens=java.base/java.net=ALL-UNNAMED,--add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED,-Xmx4096M,-Dfile.encoding=UTF-8,-Duser.country=US,-Duser.language=en,-Duser.variant]} however its context does not match the desired criteria.
+Java home is different.
+Wanted: DefaultDaemonContext[uid=null,javaHome=C:\Program Files\Eclipse Adoptium\jdk-21.0.7.6-hotspot,daemonRegistryDir=C:\Users\saket\.gradle\daemon,pid=11408,idleTimeout=null,priority=NORMAL,applyInstrumentationAgent=true,daemonOpts=--add-opens=java.base/java.util=ALL-UNNAMED,--add-opens=java.base/java.lang=ALL-UNNAMED,--add-opens=java.base/java.lang.invoke=ALL-UNNAMED,--add-opens=java.prefs/java.util.prefs=ALL-UNNAMED,--add-opens=java.base/java.nio.charset=ALL-UNNAMED,--add-opens=java.base/java.net=ALL-UNNAMED,--add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED,-Xmx4096M,-Dfile.encoding=UTF-8,-Duser.country=US,-Duser.language=en,-Duser.variant]
+Actual: DefaultDaemonContext[uid=a6b7c447-2868-45a4-a974-544993d125ea,javaHome=C:\Program Files\Android\Android Studio\jbr,daemonRegistryDir=C:\Users\saket\.gradle\daemon,pid=28536,idleTimeout=10800000,priority=NORMAL,applyInstrumentationAgent=true,daemonOpts=--add-opens=java.base/java.util=ALL-UNNAMED,--add-opens=java.base/java.lang=ALL-UNNAMED,--add-opens=java.base/java.lang.invoke=ALL-UNNAMED,--add-opens=java.prefs/java.util.prefs=ALL-UNNAMED,--add-opens=java.base/java.nio.charset=ALL-UNNAMED,--add-opens=java.base/java.net=ALL-UNNAMED,--add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED,-Xmx4096M,-Dfile.encoding=UTF-8,-Duser.country=US,-Duser.language=en,-Duser.variant]
+
+  Looking for a different daemon...
+The client will now receive all logging from the daemon (pid: 12712). The daemon log file: C:\Users\saket\.gradle\daemon\8.4\daemon-12712.out.log
+Starting 5th build in daemon [uptime: 2 mins 46.981 secs, performance: 100%, GC rate: 0.00/s, heap usage: 0% of 4 GiB]
+Using 24 worker leases.
+Now considering [C:\Users\saket\OneDrive\Desktop\3D-Gen\android, C:\Users\saket\flutter\flutter\packages\flutter_tools\gradle] as hierarchies to watch
+Watching the file system is configured to be enabled if available
+File system watching is active
+Starting Build
+Now considering [C:\Users\saket\flutter\flutter\packages\flutter_tools\gradle, C:\Users\saket\OneDrive\Desktop\3D-Gen\android] as hierarchies to watch
+
+> Configure project :gradle
+Evaluating project ':gradle' using build file 'C:\Users\saket\flutter\flutter\packages\flutter_tools\gradle\build.gradle.kts'.
+Using Kotlin Gradle Plugin gradle81 variant
+kotlin scripting plugin: created the scripting discovery configuration: kotlinScriptDef
+kotlin scripting plugin: created the scripting discovery configuration: testKotlinScriptDef
+WARNING: Unsupported Kotlin plugin version.
+The `embedded-kotlin` and `kotlin-dsl` plugins rely on features of Kotlin `1.9.10` that might work differently than in the requested version `1.9.20`.
+file or directory 'C:\Users\saket\flutter\flutter\packages\flutter_tools\gradle\src\main\java', not found
+Caching disabled for Kotlin DSL accessors for project ':gradle' because:
+  Build cache is disabled
+Skipping Kotlin DSL accessors for project ':gradle' as it is up-to-date.
+Resolve mutations for :gradle:checkKotlinGradlePluginConfigurationErrors (Thread[#652,Execution worker,5,main]) started.
+:gradle:checkKotlinGradlePluginConfigurationErrors (Thread[#652,Execution worker,5,main]) started.
+
+> Task :gradle:checkKotlinGradlePluginConfigurationErrors
+Caching disabled for task ':gradle:checkKotlinGradlePluginConfigurationErrors' because:
+  Build cache is disabled
+Task ':gradle:checkKotlinGradlePluginConfigurationErrors' is not up-to-date because:
+  Task has not declared any outputs despite executing actions.
+Resolve mutations for :gradle:compileKotlin (Thread[#652,Execution worker,5,main]) started.
+:gradle:compileKotlin (Thread[#652,Execution worker,5,main]) started.
+
+> Task :gradle:compileKotlin UP-TO-DATE
+Transforming gradle-api-8.4.jar with ClasspathEntrySnapshotTransform
+Transforming groovy-3.0.17.jar with ClasspathEntrySnapshotTransform
+Transforming groovy-ant-3.0.17.jar with ClasspathEntrySnapshotTransform
+Transforming groovy-astbuilder-3.0.17.jar with ClasspathEntrySnapshotTransform
+Transforming groovy-console-3.0.17.jar with ClasspathEntrySnapshotTransform
+Transforming groovy-datetime-3.0.17.jar with ClasspathEntrySnapshotTransform
+Transforming groovy-dateutil-3.0.17.jar with ClasspathEntrySnapshotTransform
+Transforming groovy-groovydoc-3.0.17.jar with ClasspathEntrySnapshotTransform
+Transforming groovy-json-3.0.17.jar with ClasspathEntrySnapshotTransform
+Transforming groovy-nio-3.0.17.jar with ClasspathEntrySnapshotTransform
+Transforming groovy-sql-3.0.17.jar with ClasspathEntrySnapshotTransform
+Transforming groovy-templates-3.0.17.jar with ClasspathEntrySnapshotTransform
+Transforming groovy-test-3.0.17.jar with ClasspathEntrySnapshotTransform
+Transforming groovy-xml-3.0.17.jar with ClasspathEntrySnapshotTransform
+Transforming javaparser-core-3.17.0.jar with ClasspathEntrySnapshotTransform
+Transforming kotlin-stdlib-1.9.10.jar with ClasspathEntrySnapshotTransform
+Transforming kotlin-stdlib-common-1.9.10.jar with ClasspathEntrySnapshotTransform
+Transforming kotlin-reflect-1.9.10.jar with ClasspathEntrySnapshotTransform
+Transforming gradle-installation-beacon-8.4.jar with ClasspathEntrySnapshotTransform
+Transforming gradle-kotlin-dsl-extensions-8.4.jar with ClasspathEntrySnapshotTransform
+Transforming gradle-kotlin-dsl-8.4.jar with ClasspathEntrySnapshotTransform
+Transforming gradle-kotlin-dsl-tooling-models-8.4.jar with ClasspathEntrySnapshotTransform
+Transforming annotation-jvm-1.9.1.jar with ClasspathEntrySnapshotTransform
+Transforming gradle-8.11.1.jar with ClasspathEntrySnapshotTransform
+Transforming kotlin-reflect-1.9.10.jar with ClasspathEntrySnapshotTransform
+Transforming kotlinx-serialization-json-jvm-1.4.0.jar with ClasspathEntrySnapshotTransform
+Transforming kotlinx-serialization-core-jvm-1.4.0.jar with ClasspathEntrySnapshotTransform
+Transforming kotlin-stdlib-jdk8-1.9.10.jar with ClasspathEntrySnapshotTransform
+Transforming kotlin-stdlib-jdk7-1.9.10.jar with ClasspathEntrySnapshotTransform
+Transforming kotlin-stdlib-1.9.24.jar with ClasspathEntrySnapshotTransform
+Transforming kotlin-gradle-plugin-1.8.0-gradle76.jar with ClasspathEntrySnapshotTransform
+Transforming builder-8.11.1.jar with ClasspathEntrySnapshotTransform
+Transforming builder-model-8.11.1.jar with ClasspathEntrySnapshotTransform
+Transforming gradle-api-8.11.1.jar with ClasspathEntrySnapshotTransform
+Transforming kotlin-gradle-plugin-model-1.8.0.jar with ClasspathEntrySnapshotTransform
+Transforming kotlin-gradle-plugin-api-1.8.0-gradle76.jar with ClasspathEntrySnapshotTransform
+Transforming kotlin-gradle-plugin-api-1.8.0.jar with ClasspathEntrySnapshotTransform
+Transforming kotlin-tooling-core-1.8.0.jar with ClasspathEntrySnapshotTransform
+Transforming annotations-13.0.jar with ClasspathEntrySnapshotTransform
+Transforming manifest-merger-31.11.1.jar with ClasspathEntrySnapshotTransform
+Transforming zipflinger-8.11.1.jar with ClasspathEntrySnapshotTransform
+Transforming apksig-8.11.1.jar with ClasspathEntrySnapshotTransform
+Transforming apkzlib-8.11.1.jar with ClasspathEntrySnapshotTransform
+Transforming javawriter-2.5.0.jar with ClasspathEntrySnapshotTransform
+Transforming asm-9.7.1.jar with ClasspathEntrySnapshotTransform
+Transforming kotlin-native-utils-1.8.0.jar with ClasspathEntrySnapshotTransform
+Transforming kotlin-project-model-1.8.0.jar with ClasspathEntrySnapshotTransform
+Transforming kotlin-util-io-1.8.0.jar with ClasspathEntrySnapshotTransform
+Caching disabled for task ':gradle:compileKotlin' because:
+  Build cache is disabled
+Skipping task ':gradle:compileKotlin' as it is up-to-date.
+Resolve mutations for :gradle:compileJava (Thread[#661,Execution worker Thread 10,5,main]) started.
+:gradle:compileJava (Thread[#661,Execution worker Thread 10,5,main]) started.
+
+> Task :gradle:compileJava NO-SOURCE
+Skipping task ':gradle:compileJava' as it has no source files and no previous output files.
+Resolve mutations for :gradle:compileGroovy (Thread[#661,Execution worker Thread 10,5,main]) started.
+:gradle:compileGroovy (Thread[#661,Execution worker Thread 10,5,main]) started.
+
+> Task :gradle:compileGroovy NO-SOURCE
+Skipping task ':gradle:compileGroovy' as it has no source files and no previous output files.
+Resolve mutations for :gradle:pluginDescriptors (Thread[#661,Execution worker Thread 10,5,main]) started.
+:gradle:pluginDescriptors (Thread[#661,Execution worker Thread 10,5,main]) started.
+
+> Task :gradle:pluginDescriptors UP-TO-DATE
+Caching disabled for task ':gradle:pluginDescriptors' because:
+  Build cache is disabled
+Skipping task ':gradle:pluginDescriptors' as it is up-to-date.
+Resolve mutations for :gradle:processResources (Thread[#661,Execution worker Thread 10,5,main]) started.
+:gradle:processResources (Thread[#661,Execution worker Thread 10,5,main]) started.
+
+> Task :gradle:processResources UP-TO-DATE
+Caching disabled for task ':gradle:processResources' because:
+  Build cache is disabled
+Skipping task ':gradle:processResources' as it is up-to-date.
+Resolve mutations for :gradle:classes (Thread[#661,Execution worker Thread 10,5,main]) started.
+:gradle:classes (Thread[#661,Execution worker Thread 10,5,main]) started.
+
+> Task :gradle:classes UP-TO-DATE
+Skipping task ':gradle:classes' as it has no actions.
+Resolve mutations for :gradle:jar (Thread[#661,Execution worker Thread 10,5,main]) started.
+:gradle:jar (Thread[#661,Execution worker Thread 10,5,main]) started.
+
+> Task :gradle:jar UP-TO-DATE
+Caching disabled for task ':gradle:jar' because:
+  Build cache is disabled
+Skipping task ':gradle:jar' as it is up-to-date.
+Settings evaluated using settings file 'C:\Users\saket\OneDrive\Desktop\3D-Gen\android\settings.gradle'.
+Projects loaded. Root project using build file 'C:\Users\saket\OneDrive\Desktop\3D-Gen\android\build.gradle'.
+Included projects: [root project 'android', project ':app', project ':launcher', project ':unityLibrary']
+
+> Configure project :app
+Evaluating project ':app' using build file 'C:\Users\saket\OneDrive\Desktop\3D-Gen\android\app\build.gradle'.
+WARNING: The option setting 'android.aapt2FromMavenOverride=C:\Program Files\Unity\Hub\Editor\2022.3.62f3\Editor\Data\PlaybackEngines\AndroidPlayer\SDK\build-tools\34.0.0\aapt2.exe' is experimental.
+Using default execution profile
+Using Kotlin Gradle Plugin gradle82 variant
+Build was configured to prefer settings repositories over project repositories but repository 'maven' was added by plugin 'dev.flutter.flutter-gradle-plugin'
+Build was configured to prefer settings repositories over project repositories but repository 'maven' was added by plugin 'dev.flutter.flutter-gradle-plugin'
+Build was configured to prefer settings repositories over project repositories but repository 'maven' was added by plugin 'dev.flutter.flutter-gradle-plugin'
+Build was configured to prefer settings repositories over project repositories but repository 'maven' was added by plugin 'dev.flutter.flutter-gradle-plugin'
+C/C++: android.ndkVersion from module build.gradle is [28.2.13676358]
+C/C++: android.ndkPath from module build.gradle is not set
+C/C++: ndk.dir in local.properties is not set
+C/C++: Not considering ANDROID_NDK_HOME because support was removed after deprecation period.
+C/C++: sdkFolder is C:\Users\saket\AppData\Local\Android\sdk
+C/C++: android.ndkVersion from module build.gradle is [28.2.13676358]
+C/C++: android.ndkPath from module build.gradle is not set
+C/C++: ndk.dir in local.properties is not set
+C/C++: Not considering ANDROID_NDK_HOME because support was removed after deprecation period.
+C/C++: sdkFolder is C:\Users\saket\AppData\Local\Android\sdk
+C/C++: android.ndkVersion from module build.gradle is [28.2.13676358]
+C/C++: android.ndkPath from module build.gradle is not set
+C/C++: ndk.dir in local.properties is not set
+C/C++: Not considering ANDROID_NDK_HOME because support was removed after deprecation period.
+C/C++: sdkFolder is C:\Users\saket\AppData\Local\Android\sdk
+C/C++: android.ndkVersion from module build.gradle is [28.2.13676358]
+C/C++: android.ndkPath from module build.gradle is not set
+C/C++: ndk.dir in local.properties is not set
+C/C++: Not considering ANDROID_NDK_HOME because support was removed after deprecation period.
+C/C++: sdkFolder is C:\Users\saket\AppData\Local\Android\sdk
+C/C++: android.ndkVersion from module build.gradle is [28.2.13676358]
+C/C++: android.ndkPath from module build.gradle is not set
+C/C++: ndk.dir in local.properties is not set
+C/C++: Not considering ANDROID_NDK_HOME because support was removed after deprecation period.
+C/C++: sdkFolder is C:\Users\saket\AppData\Local\Android\sdk
+C/C++: android.ndkVersion from module build.gradle is [28.2.13676358]
+C/C++: android.ndkPath from module build.gradle is not set
+C/C++: ndk.dir in local.properties is not set
+C/C++: Not considering ANDROID_NDK_HOME because support was removed after deprecation period.
+C/C++: sdkFolder is C:\Users\saket\AppData\Local\Android\sdk
+C/C++: android.ndkVersion from module build.gradle is [28.2.13676358]
+C/C++: android.ndkPath from module build.gradle is not set
+C/C++: ndk.dir in local.properties is not set
+C/C++: Not considering ANDROID_NDK_HOME because support was removed after deprecation period.
+C/C++: sdkFolder is C:\Users\saket\AppData\Local\Android\sdk
+C/C++: android.ndkVersion from module build.gradle is [28.2.13676358]
+C/C++: android.ndkPath from module build.gradle is not set
+C/C++: ndk.dir in local.properties is not set
+C/C++: Not considering ANDROID_NDK_HOME because support was removed after deprecation period.
+C/C++: sdkFolder is C:\Users\saket\AppData\Local\Android\sdk
+C/C++: android.ndkVersion from module build.gradle is [28.2.13676358]
+C/C++: android.ndkPath from module build.gradle is not set
+C/C++: ndk.dir in local.properties is not set
+C/C++: Not considering ANDROID_NDK_HOME because support was removed after deprecation period.
+C/C++: sdkFolder is C:\Users\saket\AppData\Local\Android\sdk
+C/C++: android.ndkVersion from module build.gradle is [28.2.13676358]
+C/C++: android.ndkPath from module build.gradle is not set
+C/C++: ndk.dir in local.properties is not set
+C/C++: Not considering ANDROID_NDK_HOME because support was removed after deprecation period.
+C/C++: sdkFolder is C:\Users\saket\AppData\Local\Android\sdk
+C/C++: android.ndkVersion from module build.gradle is [28.2.13676358]
+C/C++: android.ndkPath from module build.gradle is not set
+C/C++: ndk.dir in local.properties is not set
+C/C++: Not considering ANDROID_NDK_HOME because support was removed after deprecation period.
+C/C++: sdkFolder is C:\Users\saket\AppData\Local\Android\sdk
+C/C++: android.ndkVersion from module build.gradle is [28.2.13676358]
+C/C++: android.ndkPath from module build.gradle is not set
+C/C++: ndk.dir in local.properties is not set
+C/C++: Not considering ANDROID_NDK_HOME because support was removed after deprecation period.
+C/C++: sdkFolder is C:\Users\saket\AppData\Local\Android\sdk
+C/C++: android.ndkVersion from module build.gradle is [28.2.13676358]
+C/C++: android.ndkPath from module build.gradle is not set
+C/C++: ndk.dir in local.properties is not set
+C/C++: Not considering ANDROID_NDK_HOME because support was removed after deprecation period.
+C/C++: sdkFolder is C:\Users\saket\AppData\Local\Android\sdk
+C/C++: android.ndkVersion from module build.gradle is [28.2.13676358]
+C/C++: android.ndkPath from module build.gradle is not set
+C/C++: ndk.dir in local.properties is not set
+C/C++: Not considering ANDROID_NDK_HOME because support was removed after deprecation period.
+C/C++: sdkFolder is C:\Users\saket\AppData\Local\Android\sdk
+C/C++: android.ndkVersion from module build.gradle is [28.2.13676358]
+C/C++: android.ndkPath from module build.gradle is not set
+C/C++: ndk.dir in local.properties is not set
+C/C++: Not considering ANDROID_NDK_HOME because support was removed after deprecation period.
+C/C++: sdkFolder is C:\Users\saket\AppData\Local\Android\sdk
+C/C++: android.ndkVersion from module build.gradle is [28.2.13676358]
+C/C++: android.ndkPath from module build.gradle is not set
+C/C++: ndk.dir in local.properties is not set
+C/C++: Not considering ANDROID_NDK_HOME because support was removed after deprecation period.
+C/C++: sdkFolder is C:\Users\saket\AppData\Local\Android\sdk
+C/C++: android.ndkVersion from module build.gradle is [28.2.13676358]
+C/C++: android.ndkPath from module build.gradle is not set
+C/C++: ndk.dir in local.properties is not set
+C/C++: Not considering ANDROID_NDK_HOME because support was removed after deprecation period.
+C/C++: sdkFolder is C:\Users\saket\AppData\Local\Android\sdk
+C/C++: android.ndkVersion from module build.gradle is [28.2.13676358]
+C/C++: android.ndkPath from module build.gradle is not set
+C/C++: ndk.dir in local.properties is not set
+C/C++: Not considering ANDROID_NDK_HOME because support was removed after deprecation period.
+C/C++: sdkFolder is C:\Users\saket\AppData\Local\Android\sdk
+C/C++: android.ndkVersion from module build.gradle is [28.2.13676358]
+C/C++: android.ndkPath from module build.gradle is not set
+C/C++: ndk.dir in local.properties is not set
+C/C++: Not considering ANDROID_NDK_HOME because support was removed after deprecation period.
+C/C++: sdkFolder is C:\Users\saket\AppData\Local\Android\sdk
+Parsed shrinker version: 8.2.47
+
+> Configure project :
+Evaluating root project 'android' using build file 'C:\Users\saket\OneDrive\Desktop\3D-Gen\android\build.gradle'.
+Build was configured to prefer settings repositories over project repositories but repository 'Google' was added by build file 'build.gradle'
+Build was configured to prefer settings repositories over project repositories but repository 'MavenRepo' was added by build file 'build.gradle'
+Build was configured to prefer settings repositories over project repositories but repository 'Google' was added by build file 'build.gradle'
+Build was configured to prefer settings repositories over project repositories but repository 'MavenRepo' was added by build file 'build.gradle'
+Build was configured to prefer settings repositories over project repositories but repository 'Google' was added by build file 'build.gradle'
+Build was configured to prefer settings repositories over project repositories but repository 'MavenRepo' was added by build file 'build.gradle'
+Build was configured to prefer settings repositories over project repositories but repository 'Google' was added by build file 'build.gradle'
+Build was configured to prefer settings repositories over project repositories but repository 'MavenRepo' was added by build file 'build.gradle'
+
+> Configure project :launcher
+Evaluating project ':launcher' using build file 'C:\Users\saket\OneDrive\Desktop\3D-Gen\android\launcher\build.gradle'.
+Using default execution profile
+
+> Configure project :unityLibrary
+Evaluating project ':unityLibrary' using build file 'C:\Users\saket\OneDrive\Desktop\3D-Gen\android\unityLibrary\build.gradle'.
+Using default execution profile
+All projects evaluated.
+Task path ':app:dependencies' matched project ':app'
+Task name matched 'dependencies'
+Selected primary task 'dependencies' from project :app
+Tasks to be executed: [task ':app:dependencies']
+Tasks that were excluded: []
+Analytics other plugin to proto: Unknown plugin type org.gradle.kotlin.dsl.provider.plugins.KotlinScriptRootPlugin$Inject expected enum ORG_GRADLE_KOTLIN_DSL_PROVIDER_PLUGINS_KOTLINSCRIPTROOTPLUGIN
+Analytics other plugin to proto: Unknown plugin type org.gradle.api.plugins.JvmEcosystemPlugin$Inject expected enum ORG_GRADLE_API_PLUGINS_JVMECOSYSTEMPLUGIN
+Analytics other plugin to proto: Unknown plugin type org.gradle.api.plugins.JvmToolchainsPlugin$Inject expected enum ORG_GRADLE_API_PLUGINS_JVMTOOLCHAINSPLUGIN
+Analytics other plugin to proto: Unknown plugin type org.gradle.kotlin.dsl.provider.plugins.KotlinScriptBasePlugin$Inject expected enum ORG_GRADLE_KOTLIN_DSL_PROVIDER_PLUGINS_KOTLINSCRIPTBASEPLUGIN
+Analytics other plugin to proto: Unknown plugin type com.flutter.gradle.FlutterPlugin expected enum COM_FLUTTER_GRADLE_FLUTTERPLUGIN
+Analytics other plugin to proto: Unknown plugin type org.gradle.api.plugins.JvmEcosystemPlugin$Inject expected enum ORG_GRADLE_API_PLUGINS_JVMECOSYSTEMPLUGIN
+Analytics other plugin to proto: Unknown plugin type org.gradle.api.plugins.JvmToolchainsPlugin$Inject expected enum ORG_GRADLE_API_PLUGINS_JVMTOOLCHAINSPLUGIN
+Analytics other plugin to proto: Unknown plugin type org.gradle.api.plugins.JvmEcosystemPlugin$Inject expected enum ORG_GRADLE_API_PLUGINS_JVMECOSYSTEMPLUGIN
+Analytics other plugin to proto: Unknown plugin type org.gradle.api.plugins.JvmToolchainsPlugin$Inject expected enum ORG_GRADLE_API_PLUGINS_JVMTOOLCHAINSPLUGIN
+Resolve mutations for :app:dependencies (Thread[#672,Execution worker Thread 21,5,main]) started.
+:app:dependencies (Thread[#672,Execution worker Thread 21,5,main]) started.
+
+> Task :app:dependencies
+Caching disabled for task ':app:dependencies' because:
+  Build cache is disabled
+Task ':app:dependencies' is not up-to-date because:
+  Task is untracked because: Uses the whole project state as an input
+
+------------------------------------------------------------
+Project ':app'
+------------------------------------------------------------
+
+debugRuntimeClasspath - Runtime classpath of /debug.
+Resource missing. [HTTP GET: https://dl.google.com/dl/android/maven2/io/flutter/flutter_embedding_debug/1.0.0-3452d735bd38224ef2db85ca763d862d6326b17f/flutter_embedding_debug-1.0.0-3452d735bd38224ef2db85ca763d862d6326b17f.pom]
+Resource missing. [HTTP GET: https://repo.maven.apache.org/maven2/io/flutter/flutter_embedding_debug/1.0.0-3452d735bd38224ef2db85ca763d862d6326b17f/flutter_embedding_debug-1.0.0-3452d735bd38224ef2db85ca763d862d6326b17f.pom]
+Resource missing. [HTTP GET: https://dl.google.com/dl/android/maven2/io/flutter/armeabi_v7a_debug/1.0.0-3452d735bd38224ef2db85ca763d862d6326b17f/armeabi_v7a_debug-1.0.0-3452d735bd38224ef2db85ca763d862d6326b17f.pom]
+Resource missing. [HTTP GET: https://repo.maven.apache.org/maven2/io/flutter/armeabi_v7a_debug/1.0.0-3452d735bd38224ef2db85ca763d862d6326b17f/armeabi_v7a_debug-1.0.0-3452d735bd38224ef2db85ca763d862d6326b17f.pom]
+Resource missing. [HTTP GET: https://dl.google.com/dl/android/maven2/io/flutter/arm64_v8a_debug/1.0.0-3452d735bd38224ef2db85ca763d862d6326b17f/arm64_v8a_debug-1.0.0-3452d735bd38224ef2db85ca763d862d6326b17f.pom]
+Resource missing. [HTTP GET: https://repo.maven.apache.org/maven2/io/flutter/arm64_v8a_debug/1.0.0-3452d735bd38224ef2db85ca763d862d6326b17f/arm64_v8a_debug-1.0.0-3452d735bd38224ef2db85ca763d862d6326b17f.pom]
+Resource missing. [HTTP GET: https://dl.google.com/dl/android/maven2/io/flutter/x86_64_debug/1.0.0-3452d735bd38224ef2db85ca763d862d6326b17f/x86_64_debug-1.0.0-3452d735bd38224ef2db85ca763d862d6326b17f.pom]
+Resource missing. [HTTP GET: https://repo.maven.apache.org/maven2/io/flutter/x86_64_debug/1.0.0-3452d735bd38224ef2db85ca763d862d6326b17f/x86_64_debug-1.0.0-3452d735bd38224ef2db85ca763d862d6326b17f.pom]
++--- org.jetbrains.kotlin:kotlin-stdlib:1.9.22
+|    \--- org.jetbrains:annotations:13.0
++--- io.flutter:flutter_embedding_debug:1.0.0-3452d735bd38224ef2db85ca763d862d6326b17f FAILED
++--- io.flutter:armeabi_v7a_debug:1.0.0-3452d735bd38224ef2db85ca763d862d6326b17f FAILED
++--- io.flutter:arm64_v8a_debug:1.0.0-3452d735bd38224ef2db85ca763d862d6326b17f FAILED
++--- io.flutter:x86_64_debug:1.0.0-3452d735bd38224ef2db85ca763d862d6326b17f FAILED
+\--- project :unityLibrary
+
+A web-based, searchable dependency report is available by adding the --scan option.
+Could not execute [report metric STATISTICS_COLLECT_METRICS_OVERHEAD]
+Could not execute [report metric STATISTICS_COLLECT_METRICS_OVERHEAD]
+
+BUILD SUCCESSFUL in 1s
+6 actionable tasks: 2 executed, 4 up-to-date
+Watched directory hierarchies: [C:\Users\saket\flutter\flutter\packages\flutter_tools\gradle]

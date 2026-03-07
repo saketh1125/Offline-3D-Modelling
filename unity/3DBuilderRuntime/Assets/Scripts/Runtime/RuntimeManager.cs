@@ -4,6 +4,7 @@ using ThreeDBuilder.Core;
 using ThreeDBuilder.Communication;
 using ThreeDBuilder.Scene;
 using ThreeDBuilder.Builders;
+using ThreeDBuilder.Core.Diagnostics;
 
 
 using CoreLogger = ThreeDBuilder.Core.Logger;
@@ -64,7 +65,18 @@ namespace ThreeDBuilder.Runtime
             _sceneInterpreter = new SceneInterpreter();
             _sceneBuilder = new SceneBuilder();
 
+            UnityDiagnosticsLogger.Initialize();
+            UnityDiagnosticsLogger.Log("RuntimeManager: Awake. Instance registered.");
+
             CoreLogger.Info("RuntimeManager: Awake. Instance registered and pipeline components initialized.");
+        }
+
+        private void Start()
+        {
+            UnityDiagnosticsLogger.Log("RuntimeManager: Start. Emitting initialization event to Flutter.");
+            CoreLogger.Info("RuntimeManager: Start. Emitting initialization event to Flutter.");
+            // Signal to the host Flutter app that Unity is fully loaded and ready for commands.
+            EmitEvent(EngineEventType.Initialized, "unity-init", null);
         }
 
         /// <summary>
@@ -117,6 +129,7 @@ namespace ThreeDBuilder.Runtime
         /// </summary>
         public void ReceiveCommand(string json)
         {
+            UnityDiagnosticsLogger.Log($"RuntimeManager.ReceiveCommand: {json}");
             // Outermost catch: nothing escapes this method.
             try
             {
@@ -390,6 +403,7 @@ namespace ThreeDBuilder.Runtime
 
             CoreLogger.Info($"RuntimeManager: Emitting -> {envelope}");
 
+            Debug.Log("[DIAG] Unity EmitEvent JSON=" + json);
             FlutterBridge.SendToFlutter(json);
         }
 
