@@ -98,6 +98,7 @@ logcat.txt
 trace.log
 unity_export.log
 unity/3DBuilderRuntime/build_log.txt
+*.log
 
 # ================================
 # Unity Build Artifacts
@@ -125,3 +126,11 @@ android/unity_export/
 ios/Flutter/Flutter.framework
 ios/Flutter/App.framework
 ios/Flutter/engine/
+
+# Logs
+*.log
+unity_export*.log
+logcat.txt
+trace.log
+all_logs.txt
+unity/3DBuilderRuntime/build_log.txt
