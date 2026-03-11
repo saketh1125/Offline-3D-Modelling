@@ -1,0 +1,39 @@
+{
+  "schema_version": "1.0",
+  "environment": {
+    "skybox": {
+      "type": "procedural",
+      "sunSize": 0.04,
+      "atmosphereThickness": 1.2,
+      "skyTint": [0.7, 0.85, 1.0],
+      "groundColor": [0.2, 0.15, 0.1]
+    },
+    "fog": {
+      "enabled": true,
+      "mode": "linear",
+      "start": 80,
+      "end": 200,
+      "color": [0.7, 0.75, 0.8]
+    },
+    "ground": {
+      "enabled": false
+    },
+    "backgroundColor": [0.1, 0.2, 0.3]
+  },
+  "lighting": {
+    "preset": "outdoor"
+  },
+  "sceneTemplate": {
+    "type": "taj_mahal"
+  },
+  "materials": [
+    {
+      "id": "marble",
+      "baseColor": [0.95, 0.95, 0.9]
+    },
+    {
+      "id": "water",
+      "baseColor": [0.3, 0.5, 0.7]
+    }
+  ]
+}

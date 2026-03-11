@@ -27,7 +27,8 @@ namespace ThreeDBuilder.Protocol
         Initialize,
         LoadScene,
         ClearScene,
-        Dispose
+        Dispose,
+        CameraMove
     }
 
     /// <summary>
@@ -36,6 +37,7 @@ namespace ThreeDBuilder.Protocol
     /// </summary>
     public enum EngineEventType
     {
+        UnityReady,
         Initialized,
         SceneLoading,
         SceneReady,
@@ -58,6 +60,7 @@ namespace ThreeDBuilder.Protocol
                 case EngineCommand.LoadScene:    return "load_scene";
                 case EngineCommand.ClearScene:   return "clear_scene";
                 case EngineCommand.Dispose:      return "dispose";
+                case EngineCommand.CameraMove:   return "camera_move";
                 default:
                     throw new ArgumentOutOfRangeException(nameof(command), command, "Unknown command");
             }
@@ -75,6 +78,7 @@ namespace ThreeDBuilder.Protocol
                 case "load_scene":  command = EngineCommand.LoadScene;   return true;
                 case "clear_scene": command = EngineCommand.ClearScene;  return true;
                 case "dispose":     command = EngineCommand.Dispose;     return true;
+                case "camera_move": command = EngineCommand.CameraMove;  return true;
                 default:            command = default;                    return false;
             }
         }
@@ -85,6 +89,7 @@ namespace ThreeDBuilder.Protocol
         {
             switch (eventType)
             {
+                case EngineEventType.UnityReady:       return "unity_ready";
                 case EngineEventType.Initialized:      return "initialized";
                 case EngineEventType.SceneLoading:     return "scene_loading";
                 case EngineEventType.SceneReady:       return "scene_ready";

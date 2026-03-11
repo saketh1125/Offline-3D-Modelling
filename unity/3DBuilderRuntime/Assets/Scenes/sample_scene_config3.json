@@ -1,0 +1,59 @@
+{
+  "schema_version": "1.0",
+  "environment": {
+    "backgroundColor": [0.1, 0.1, 0.2],
+    "skybox": {
+      "type": "none"
+    },
+    "fog": {
+      "enabled": true,
+      "mode": "exp",
+      "density": 0.03,
+      "color": [0.2, 0.2, 0.3]
+    },
+    "ground": {
+      "enabled": false
+    }
+  },
+  "lighting": {
+    "type": "point",
+    "intensity": 2.0,
+    "color": [0.8, 0.8, 1.0],
+    "shadows": false
+  },
+  "camera": {
+    "mode": "static",
+    "position": [10, 10, -10],
+    "lookAt": [0, 0, 0]
+  },
+  "materials": [
+    {
+      "id": "emissive_blue",
+      "baseColor": [0.2, 0.2, 0.8]
+    },
+    {
+      "id": "dark",
+      "baseColor": [0.1, 0.1, 0.1]
+    }
+  ],
+  "objects": [
+    {
+      "id": "floating_orb",
+      "primitive": "sphere",
+      "materialRef": "emissive_blue",
+      "transform": {
+        "position": [0, 2, 0],
+        "scale": [2, 2, 2]
+      }
+    },
+    {
+      "id": "base",
+      "primitive": "cube",
+      "materialRef": "dark",
+      "transform": {
+        "position": [0, -1, 0],
+        "scale": [20, 1, 20]
+      }
+    }
+  ]
+}

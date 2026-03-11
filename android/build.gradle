@@ -1,7 +1,12 @@
 // Top-level build file for multi-module Flutter + Unity project.
 
+
 allprojects {
     repositories {
+        flatDir {
+            dirs "${project(':unityLibrary').projectDir}/libs"
+        }
+
         google()
         mavenCentral()
     }
@@ -11,6 +16,60 @@ rootProject.buildDir = '../build'
 
 subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
+    
+    // Global overrides for all subprojects (plugins)
+    project.configurations.all {
+        resolutionStrategy.eachDependency { details ->
+            if (details.requested.group == 'androidx.core') {
+                details.useVersion "1.13.1"
+            }
+        }
+    }
+
+    def applyOverrides = { p ->
+        if (p.hasProperty('android')) {
+            p.android {
+                compileSdkVersion 36
+                buildToolsVersion "36.0.0"
+                
+                // IMPORTANT: Unity Library module uses Unity's bundled NDK
+                // Do NOT apply ndkVersion to unityLibrary - it has its own configuration
+                if (p.name != 'unityLibrary') {
+                    ndkVersion "28.2.13676358"
+                }
+                
+                compileOptions {
+                    sourceCompatibility JavaVersion.VERSION_11
+                    targetCompatibility JavaVersion.VERSION_11
+                }
+            }
+        }
+        
+        // Special handling for unityLibrary to prevent NDK version conflicts
+        if (p.name == 'unityLibrary') {
+            p.afterEvaluate {
+                if (p.hasProperty('android')) {
+                    // Force Unity NDK configuration and prevent overrides
+                    p.android {
+                        ndkVersion "23.1.7779620"
+                    }
+                }
+            }
+        }
+        
+        p.tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+            kotlinOptions {
+                jvmTarget = "11"
+            }
+        }
+    }
+
+    if (project.state.executed) {
+        applyOverrides(project)
+    } else {
+        project.afterEvaluate { applyOverrides(it) }
+    }
+
     project.evaluationDependsOn(':app')
 }
 

@@ -1,0 +1,20 @@
+# Flutter SDK Configuration
+flutter.sdk=C:\\flutter
+
+# Android SDK Configuration
+sdk.dir=C:\\Users\\%USERNAME%\\AppData\\Local\\Android\\Sdk
+
+# Unity NDK Configuration - CRITICAL for IL2CPP builds
+# Unity IL2CPP requires Unity's bundled NDK, NOT Flutter's NDK
+# Update this path to match your Unity installation
+unity.ndk.path=C:\\Program Files\\Unity\\Hub\\Editor\\2022.3.62f3\\Editor\\Data\\PlaybackEngines\\AndroidPlayer\\NDK
+
+# Alternative Unity NDK paths (uncomment and update if needed):
+# For Unity 2022.3.61f1:
+# unity.ndk.path=C:\\Program Files\\Unity\\Hub\\Editor\\2022.3.61f1\\Editor\\Data\\PlaybackEngines\\AndroidPlayer\\NDK
+# For Unity 2022.3.60f1:
+# unity.ndk.path=C:\\Program Files\\Unity\\Hub\\Editor\\2022.3.60f1\\Editor\\Data\\PlaybackEngines\\AndroidPlayer\\NDK
+
+# Note: The Flutter app module uses NDK 27.x for plugins
+# The unityLibrary module uses Unity's NDK for IL2CPP compilation
+# This separation prevents build conflicts

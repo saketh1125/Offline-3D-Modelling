@@ -1,8 +1,7 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:on_device_3d_builder/controllers/scene_controller.dart';
 import 'package:on_device_3d_builder/core/config/app_config.dart';
 import 'package:on_device_3d_builder/core/logging/app_logger.dart';
-import 'package:on_device_3d_builder/engine/adapters/unity_engine_adapter.dart';
 import 'package:on_device_3d_builder/ui/scene_editor_page.dart';
 
 void main() async {
@@ -14,14 +13,8 @@ void main() async {
 
   logger.info('Application Starting: ${config.appName}');
 
-  // Wire the rendering pipeline via native Unity bindings
-  final engine = UnityEngineAdapter(logger);
-
-  // Wait for Unity engine to establish its platform view
-  await engine.initialize();
-
-  // Create our interaction controller
-  final sceneController = SceneController(engine: engine);
+  // Create our interaction controller tailored for flutter_unity_widget
+  final sceneController = SceneController();
 
   runApp(
       OnDevice3DBuilderApp(config: config, sceneController: sceneController));

@@ -69,14 +69,25 @@ namespace ThreeDBuilder.Runtime
             UnityDiagnosticsLogger.Log("RuntimeManager: Awake. Instance registered.");
 
             CoreLogger.Info("RuntimeManager: Awake. Instance registered and pipeline components initialized.");
+            Debug.Log("[UNITY DIAG] RuntimeManager Awake executed");
         }
 
         private void Start()
         {
-            UnityDiagnosticsLogger.Log("RuntimeManager: Start. Emitting initialization event to Flutter.");
-            CoreLogger.Info("RuntimeManager: Start. Emitting initialization event to Flutter.");
-            // Signal to the host Flutter app that Unity is fully loaded and ready for commands.
-            EmitEvent(EngineEventType.Initialized, "unity-init", null);
+            Debug.Log("[UNITY DIAG] RuntimeManager.Start() called");
+            UnityDiagnosticsLogger.Log("RuntimeManager: Start. Unity initialized, emitting unity_ready.");
+            CoreLogger.Info("RuntimeManager: Start. Emitting unity_ready via protocol enum.");
+
+            EmitEvent(EngineEventType.UnityReady, "unity-ready", "{}");
+
+            GameObject debug = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            debug.name = "UNITY_RENDER_TEST";
+            debug.transform.position = new Vector3(0f, 1f, 5f);
+            debug.transform.localScale = new Vector3(2f, 2f, 2f);
+
+            Debug.Log("[Render Diagnostic] Debug cube spawned at (0,1,5)");
+
+            Debug.Log("[UNITY DIAG] unity_ready event emitted successfully");
         }
 
         /// <summary>
@@ -129,6 +140,7 @@ namespace ThreeDBuilder.Runtime
         /// </summary>
         public void ReceiveCommand(string json)
         {
+            Debug.Log("[RuntimeManager] JSON RECEIVED: " + json);
             UnityDiagnosticsLogger.Log($"RuntimeManager.ReceiveCommand: {json}");
             // Outermost catch: nothing escapes this method.
             try
@@ -139,6 +151,7 @@ namespace ThreeDBuilder.Runtime
             {
                 // Last-resort handler. If we get here, something truly unexpected
                 // happened in validation or dispatch. Log and emit generic error.
+                UnityEngine.Debug.LogError("ReceiveCommand exception: " + e.ToString());
                 CoreLogger.Error("RuntimeManager: Unhandled exception in ReceiveCommand.", e);
                 try
                 {
@@ -169,9 +182,12 @@ namespace ThreeDBuilder.Runtime
             try
             {
                 envelope = CommandEnvelope.FromJson(json);
+                Debug.Log("[RuntimeManager] COMMAND TYPE: " + envelope.command);
+                Debug.Log("[RuntimeManager] PAYLOAD: " + envelope.payload);
             }
             catch (System.Exception e)
             {
+                UnityEngine.Debug.LogError("Command parse error: " + e.ToString());
                 CoreLogger.Error("RuntimeManager: Failed to deserialize command.", e);
                 EmitErrorEvent(null, "INVALID_COMMAND_JSON", e.Message);
                 return;
@@ -208,13 +224,16 @@ namespace ThreeDBuilder.Runtime
 
         private void DispatchCommand(EngineCommand command, CommandEnvelope envelope)
         {
+            UnityEngine.Debug.Log("Executing command: " + envelope.command);
             switch (command)
             {
                 case EngineCommand.Initialize:
+                    UnityEngine.Debug.Log("Executing command: initialize");
                     HandleInitialize(envelope);
                     break;
 
                 case EngineCommand.LoadScene:
+                    UnityEngine.Debug.Log("Executing command: load_scene");
                     HandleLoadScene(envelope);
                     break;
 
@@ -224,6 +243,11 @@ namespace ThreeDBuilder.Runtime
 
                 case EngineCommand.Dispose:
                     HandleDispose(envelope);
+                    break;
+                
+                case EngineCommand.CameraMove:
+                    UnityEngine.Debug.Log("Executing command: move_camera");
+                    HandleCameraMove(envelope);
                     break;
 
                 default:
@@ -249,10 +273,12 @@ namespace ThreeDBuilder.Runtime
                 return;
             }
 
-            // TODO: Initialize Unity subsystems (lighting, camera, scene graph)
+            // Initialize Unity subsystems: environment, lighting, camera, reflections
+            SceneEnvironmentBootstrap.Setup();
+            ReflectionProbeBootstrap.Setup();
 
             _isInitialized = true;
-            CoreLogger.Info("RuntimeManager: Initialization complete.");
+            CoreLogger.Info("RuntimeManager: Initialization complete (environment + reflections bootstrapped).");
             EmitEvent(EngineEventType.Initialized, envelope.request_id);
         }
 
@@ -262,49 +288,81 @@ namespace ThreeDBuilder.Runtime
 
             if (!_isInitialized)
             {
-                CoreLogger.Error("RuntimeManager: Cannot load scene — not initialized.");
                 EmitErrorEvent(envelope.request_id, "NOT_INITIALIZED",
                     "Engine must be initialized before loading a scene.");
                 return;
             }
 
-            // Emit loading event
             EmitEvent(EngineEventType.SceneLoading, envelope.request_id);
-
-            CoreLogger.Info($"RuntimeManager: Scene payload size: " +
-                        $"{(string.IsNullOrEmpty(envelope.payload) ? 0 : envelope.payload.Length)} chars");
 
             try
             {
-                // Step 1: Parse JSON into our plain-data SceneModel mapping
+                UnityEngine.Debug.Log("RuntimeManager: Clearing previous scene");
+                UnityEngine.Debug.Log("RuntimeManager: Child count before clearing = " + transform.childCount);
+                
+                // --- CLEAR PREVIOUS SCENE ---
+                if (_currentSceneRoot != null)
+                {
+                    UnityEngine.Debug.Log("RuntimeManager: Destroying previous scene root: " + _currentSceneRoot.name);
+                    DestroyImmediate(_currentSceneRoot);
+                    _currentSceneRoot = null;
+                }
+
+                // Remove all children using reverse for-loop to safely modify hierarchy
+                for (int i = transform.childCount - 1; i >= 0; i--)
+                {
+                    Transform child = transform.GetChild(i);
+                    UnityEngine.Debug.Log("RuntimeManager: Destroying child: " + child.name);
+                    DestroyImmediate(child.gameObject);
+                }
+
+                UnityEngine.Debug.Log("RuntimeManager: Scene cleared. Child count now = " + transform.childCount);
+
+                Debug.Log("RuntimeManager: Parsing scene JSON");
+
                 SceneModel parsedScene = _sceneInterpreter.ParseScene(envelope.payload);
 
-                if (parsedScene != null)
+                if (parsedScene == null)
                 {
-                    CoreLogger.Info($"RuntimeManager: Parsed JSON successfully. Found {parsedScene.objects.Count} objects.");
-
-                    // Step 2: Use SceneBuilder to translate the model into Unity standard GameObjects
-                    GameObject generatedRoot = _sceneBuilder.BuildScene(parsedScene);
-
-                    if (generatedRoot != null)
-                    {
-                        // Attach the resulting hierarchy to this executing MonoBehaviour
-                        generatedRoot.transform.SetParent(this.transform);
-                        _currentSceneRoot = generatedRoot;
-                        
-                        CoreLogger.Info("RuntimeManager: Scene built successfully!");
-                        EmitEvent(EngineEventType.SceneReady, envelope.request_id);
-                    }
-                    else
-                    {
-                        CoreLogger.Error("RuntimeManager: BuildScene returned null root object.");
-                        EmitErrorEvent(envelope.request_id, "BUILD_FAILED", "Scene built successfully but root object is null.");
-                    }
+                    Debug.LogError("[RuntimeManager] Scene parsing returned NULL.");
+                    EmitErrorEvent(envelope.request_id, "PARSE_FAILED", "Scene JSON invalid");
+                    return;
                 }
+                else
+                {
+                    Debug.Log("[RuntimeManager] Scene parsed successfully.");
+                    Debug.Log("[RuntimeManager] Objects count: " + parsedScene.objects.Count);
+                }
+
+                Debug.Log("RuntimeManager: Building scene");
+
+                GameObject generatedRoot = _sceneBuilder.BuildScene(parsedScene);
+
+                if (generatedRoot == null)
+                {
+                    Debug.LogError("RuntimeManager: SceneBuilder returned null");
+                    EmitErrorEvent(envelope.request_id, "BUILD_FAILED", "SceneBuilder returned null");
+                    return;
+                }
+
+                UnityEngine.Debug.Log("RuntimeManager: Scene built successfully. Root: " + generatedRoot.name);
+                UnityEngine.Debug.Log("RuntimeManager: Child count after build = " + transform.childCount);
+                
+                // Count total objects in the new scene
+                int totalObjects = generatedRoot.transform.GetComponentsInChildren<Transform>().Length;
+                UnityEngine.Debug.Log("RuntimeManager: Total objects in new scene = " + totalObjects);
+
+                generatedRoot.transform.SetParent(this.transform, true);
+                Debug.Log("[RuntimeManager] Scene root attached. Child count: " + this.transform.childCount);
+                _currentSceneRoot = generatedRoot;
+
+                Debug.Log("RuntimeManager: Scene ready");
+
+                EmitEvent(EngineEventType.SceneReady, envelope.request_id);
             }
             catch (System.Exception ex)
             {
-                CoreLogger.Error("RuntimeManager: Failed to build procedural scene.", ex);
+                Debug.LogError("RuntimeManager: Scene build exception: " + ex.ToString());
                 EmitErrorEvent(envelope.request_id, "SCENE_BUILD_FAILED", ex.Message);
             }
         }
@@ -334,12 +392,69 @@ namespace ThreeDBuilder.Runtime
 
             if (_currentSceneRoot != null)
             {
-                Destroy(_currentSceneRoot);
+                DestroyImmediate(_currentSceneRoot);
                 _currentSceneRoot = null;
             }
 
             CoreLogger.Info("RuntimeManager: Disposed.");
             // Note: no event emitted after dispose — Flutter orchestrator handles this.
+        }
+
+        private void HandleCameraMove(CommandEnvelope envelope)
+        {
+            if (string.IsNullOrEmpty(envelope.payload)) return;
+
+            try
+            {
+                var moveData = JsonUtility.FromJson<CameraMovePayload>(envelope.payload);
+                if (moveData == null || string.IsNullOrEmpty(moveData.direction)) return;
+
+                CoreLogger.Info($"RuntimeManager: Moving camera -> {moveData.direction}");
+
+                GameObject camObj = GameObject.FindWithTag("MainCamera");
+                if (camObj == null) camObj = Camera.main?.gameObject;
+                
+                if (camObj != null)
+                {
+                    float moveAmount = 1.0f;
+                    switch (moveData.direction.ToLower())
+                    {
+                        case "up": case "down": case "left": case "right":
+                        case "forward": case "back": case "zoom_in": case "zoom_out":
+                            CoreLogger.Info($"RuntimeManager: Moving camera -> {moveData.direction}");
+                            break;
+                        case "reset":
+                            UnityEngine.Debug.Log("Executing command: reset_camera");
+                            CoreLogger.Info("RuntimeManager: Resetting camera");
+                            // Try to find the TouchOrbitCamera and call reset
+                            TouchOrbitCamera touchCam = camObj.GetComponent<TouchOrbitCamera>();
+                            if (touchCam != null)
+                            {
+                                touchCam.ResetCamera();
+                            }
+                            else
+                            {
+                                // Fallback
+                                camObj.transform.position = new Vector3(0, 5, -10);
+                                camObj.transform.LookAt(Vector3.zero);
+                            }
+                            break;
+                        default:
+                            CoreLogger.Warning($"RuntimeManager: Camera command '{moveData.direction}' is ignored. Using touch controls now.");
+                            break;
+                    }
+                }
+            }
+            catch (System.Exception ex)
+            {
+                CoreLogger.Error("RuntimeManager: Failed to handle camera move.", ex);
+            }
+        }
+
+        [System.Serializable]
+        private class CameraMovePayload
+        {
+            public string direction;
         }
 
         // ─────────────────────────────────────────────────────────────────
@@ -357,7 +472,7 @@ namespace ThreeDBuilder.Runtime
 
             if (_currentSceneRoot != null)
             {
-                Destroy(_currentSceneRoot);
+                DestroyImmediate(_currentSceneRoot);
                 _currentSceneRoot = null;
             }
 
@@ -409,9 +524,9 @@ namespace ThreeDBuilder.Runtime
 
         private void EmitErrorEvent(string requestId, string code, string message)
         {
-            // Build error payload JSON manually (JsonUtility doesn't handle dictionaries).
-            string errorPayload = $"{{\"code\":\"{EscapeJson(code)}\",\"message\":\"{EscapeJson(message)}\"}}";
+            Debug.Log($"RuntimeManager: Emitting error event -> {code} : {message}");
 
+            string errorPayload = $"{{\"code\":\"{EscapeJson(code)}\",\"message\":\"{EscapeJson(message)}\"}}";
             EmitEvent(EngineEventType.Error, requestId, errorPayload);
         }
 

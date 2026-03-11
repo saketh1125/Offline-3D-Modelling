@@ -1,4 +1,4 @@
-﻿import 'dart:async';
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:on_device_3d_builder/core/logging/app_logger.dart';
@@ -22,6 +22,9 @@ class MockEngineAdapter implements RenderEngine {
 
   @override
   Stream<EngineEvent> get events => _eventController.stream;
+
+  @override
+  bool get isReady => _isInitialized;
 
   @override
   Future<void> initialize() async {

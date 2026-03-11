@@ -1,4 +1,4 @@
-﻿import 'package:on_device_3d_builder/engine/contract/engine_event.dart';
+import 'package:on_device_3d_builder/engine/contract/engine_event.dart';
 
 /// Abstract contract for any rendering engine implementation.
 ///
@@ -28,9 +28,9 @@ abstract class RenderEngine {
   /// Implementations must close any open streams or native resources.
   Future<void> dispose();
 
-  /// A broadcast stream of [EngineEvent]s emitted by the engine.
-  ///
-  /// Listeners can subscribe to receive lifecycle updates,
-  /// rendering status changes, and error notifications.
+  /// Emits structural events (e.g., scene_loading, errors) from the native engine.
   Stream<EngineEvent> get events;
+
+  /// Whether the engine has natively broadcasted it is fully loaded and ready for commands.
+  bool get isReady;
 }

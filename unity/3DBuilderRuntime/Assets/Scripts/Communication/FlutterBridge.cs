@@ -1,3 +1,5 @@
+using UnityEngine;
+using FlutterUnityIntegration;
 using ThreeDBuilder.Core;
 using ThreeDBuilder.Protocol;
 using ThreeDBuilder.Core.Diagnostics;
@@ -33,19 +35,17 @@ namespace ThreeDBuilder.Communication
                 CoreLogger.Warning("FlutterBridge.SendToFlutter: Attempted to send null/empty JSON.");
                 return;
             }
-
-            #if UNITY_ANDROID && !UNITY_EDITOR
+            Debug.Log("[UNITY DIAG] Sending event to Flutter: " + eventJson);
+            
+            #if UNITY_ANDROID || UNITY_IOS
             try
             {
-                using (var unityPlayer = new UnityEngine.AndroidJavaClass("com.unity3d.player.UnityPlayer"))
-                using (var activity = unityPlayer.GetStatic<UnityEngine.AndroidJavaObject>("currentActivity"))
-                {
-                    activity.CallStatic("onUnityEvent", eventJson);
-                }
+                // Requires the flutter_unity_widget .unitypackage to be imported.
+                UnityMessageManager.Instance.SendMessageToFlutter(eventJson);
             }
             catch (System.Exception ex)
             {
-                CoreLogger.Error("FlutterBridge.SendToFlutter: JNI CallStatic failed. ", ex);
+                CoreLogger.Error("FlutterBridge: Failed to send via UnityMessageManager. Is the flutter_unity_widget plugin imported?", ex);
             }
             #endif
 

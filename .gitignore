@@ -89,3 +89,39 @@ sysinfo.txt
 *.pidb
 *.booproj
 *.svd
+
+# ================================
+# Project Logs
+# ================================
+all_logs.txt
+logcat.txt
+trace.log
+unity_export.log
+unity/3DBuilderRuntime/build_log.txt
+
+# ================================
+# Unity Build Artifacts
+# ================================
+unity/3DBuilderRuntime/Builds/
+unity/3DBuilderRuntime/UpgradeLog.htm
+
+# ================================
+# AI Tooling / Development Agents
+# ================================
+.windsurf/
+.antigravity/
+.antigravity-cache/
+.ai_cache/
+
+# ================================
+# Unity Android Export Artifacts
+# ================================
+android/unityLibrary/
+android/unity_export/
+
+# ================================
+# iOS Unity Bridge Artifacts
+# ================================
+ios/Flutter/Flutter.framework
+ios/Flutter/App.framework
+ios/Flutter/engine/

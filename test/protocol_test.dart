@@ -1,4 +1,4 @@
-﻿import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:on_device_3d_builder/core/errors/engine_exception.dart';
 import 'package:on_device_3d_builder/engine/protocol/command_envelope.dart';
 import 'package:on_device_3d_builder/engine/protocol/event_envelope.dart';
@@ -26,7 +26,6 @@ void main() {
     });
 
     test('fromValue resolves known commands', () {
-      expect(EngineCommand.fromValue('initialize'), EngineCommand.initialize);
       expect(EngineCommand.fromValue('load_scene'), EngineCommand.loadScene);
       expect(EngineCommand.fromValue('clear_scene'), EngineCommand.clearScene);
       expect(EngineCommand.fromValue('dispose'), EngineCommand.dispose);
@@ -44,8 +43,6 @@ void main() {
     });
 
     test('fromValue resolves known events', () {
-      expect(EngineEventType.fromValue('initialized'),
-          EngineEventType.initialized);
       expect(EngineEventType.fromValue('scene_loading'),
           EngineEventType.sceneLoading);
       expect(
@@ -66,7 +63,7 @@ void main() {
 
   group('CommandEnvelope', () {
     test('create() auto-fills protocol version v1', () {
-      final env = CommandEnvelope.create(EngineCommand.initialize);
+      final env = CommandEnvelope.create(EngineCommand.loadScene);
       expect(env.protocolVersion, ProtocolVersion.v1);
     });
 
@@ -78,7 +75,7 @@ void main() {
     test('create() generates unique request IDs', () {
       final ids = List.generate(
         10,
-        (_) => CommandEnvelope.create(EngineCommand.initialize).requestId,
+        (_) => CommandEnvelope.create(EngineCommand.loadScene).requestId,
       );
       expect(ids.toSet().length, 10);
     });

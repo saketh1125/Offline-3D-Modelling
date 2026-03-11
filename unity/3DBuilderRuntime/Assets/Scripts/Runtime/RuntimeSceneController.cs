@@ -88,10 +88,31 @@ namespace ThreeDBuilder.Runtime
                 Debug.LogError($"Procedural Engine Error: Failed to bootstrap procedural scene: {ex.Message}\n{ex.StackTrace}");
             }
 
-            // Inject Orbit Camera dynamically to Camera.main to meet execution constraints seamlessly
-            if (Camera.main != null && Camera.main.gameObject.GetComponent<OrbitCameraController>() == null)
+            // Inject TouchOrbitCamera dynamically to Camera.main for mobile gesture support
+            if (Camera.main != null && Camera.main.gameObject.GetComponent<TouchOrbitCamera>() == null)
             {
-                Camera.main.gameObject.AddComponent<OrbitCameraController>();
+                TouchOrbitCamera orbitCam = Camera.main.gameObject.AddComponent<TouchOrbitCamera>();
+                
+                // Configure default settings for mobile
+                orbitCam.orbitSpeed = 120f;
+                orbitCam.verticalSpeed = 120f;
+                orbitCam.zoomSpeed = 0.5f;
+                orbitCam.panSpeed = 0.5f;
+                orbitCam.minDistance = 5f;
+                orbitCam.maxDistance = 150f;
+                
+                Debug.Log("Procedural Engine: Added TouchOrbitCamera with mobile gesture support.");
+            }
+            
+            // Remove any deprecated OrbitCameraController if present
+            if (Camera.main != null)
+            {
+                OrbitCameraController deprecatedController = Camera.main.gameObject.GetComponent<OrbitCameraController>();
+                if (deprecatedController != null)
+                {
+                    Object.Destroy(deprecatedController);
+                    Debug.Log("Procedural Engine: Removed deprecated OrbitCameraController.");
+                }
             }
         }
     }

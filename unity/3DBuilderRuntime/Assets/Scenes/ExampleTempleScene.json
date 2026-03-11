@@ -1,0 +1,62 @@
+{
+  "schema_version": "1.0",
+  "environment": {
+    "skybox": {
+      "type": "procedural",
+      "sunSize": 0.04,
+      "atmosphereThickness": 0.8,
+      "skyTint": [0.7, 0.8, 0.9],
+      "groundColor": [0.3, 0.25, 0.2]
+    },
+    "fog": {
+      "enabled": true,
+      "mode": "linear",
+      "start": 40,
+      "end": 120,
+      "color": [0.7, 0.75, 0.8]
+    },
+    "ground": {
+      "enabled": true,
+      "size": [200, 1, 200],
+      "color": [0.3, 0.28, 0.25],
+      "metallic": 0.0,
+      "glossiness": 0.1
+    },
+    "backgroundColor": [0.1, 0.2, 0.3]
+  },
+  "lighting": {
+    "preset": "museum"
+  },
+  "sceneTemplate": {
+    "type": "temple",
+    "parameters": {
+      "radius": 15,
+      "pillars": 12
+    }
+  },
+  "materials": [
+    {
+      "id": "stone",
+      "baseColor": [0.5, 0.5, 0.55]
+    },
+    {
+      "id": "marble",
+      "baseColor": [0.95, 0.95, 0.9]
+    },
+    {
+      "id": "tile",
+      "baseColor": [0.8, 0.3, 0.2]
+    }
+  ],
+  "objects": [
+    {
+      "id": "temple_floor",
+      "primitive": "cylinder",
+      "materialRef": "stone",
+      "transform": {
+        "position": [0, 0, 0],
+        "scale": [30, 0.5, 30]
+      }
+    }
+  ]
+}

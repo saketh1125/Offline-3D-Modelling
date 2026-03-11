@@ -1,0 +1,123 @@
+{
+  "schema_version": "1.0",
+  "environment": {
+    "backgroundColor": [0.1, 0.1, 0.2],
+    "skybox": {
+      "type": "none"
+    },
+    "fog": {
+      "enabled": true,
+      "mode": "exp2",
+      "density": 0.008,
+      "color": [0.2, 0.2, 0.3]
+    },
+    "ground": {
+      "enabled": true,
+      "size": [500, 1, 500],
+      "color": [0.15, 0.15, 0.2]
+    }
+  },
+  "lighting": {
+    "type": "directional",
+    "rotation": [70, -45, 0],
+    "intensity": 0.8,
+    "color": [0.6, 0.6, 0.8],
+    "shadows": true
+  },
+  "camera": {
+    "mode": "orbit",
+    "target": [0, 0, 0],
+    "distance": 40,
+    "elevation": 35
+  },
+  "materials": [
+    {
+      "id": "crystal",
+      "baseColor": [0.3, 0.7, 0.9]
+    },
+    {
+      "id": "obsidian",
+      "baseColor": [0.1, 0.1, 0.15]
+    },
+    {
+      "id": "energy",
+      "baseColor": [0.8, 0.2, 0.8]
+    }
+  ],
+  "objects": [
+    {
+      "id": "crystal_spiral_tower",
+      "primitive": "cylinder",
+      "materialRef": "crystal",
+      "structure": {
+        "type": "spiral",
+        "count": 50,
+        "radius": 8,
+        "height": 30,
+        "spacing": 0.8
+      },
+      "transform": {
+        "position": [0, 0, 0],
+        "scale": [0.3, 2, 0.3]
+      }
+    },
+    {
+      "id": "obsidian_rings",
+      "primitive": "torus",
+      "materialRef": "obsidian",
+      "structure": {
+        "type": "circle",
+        "count": 3,
+        "radius": 20
+      },
+      "transform": {
+        "position": [0, 15, 0],
+        "scale": [2, 0.5, 2]
+      }
+    },
+    {
+      "id": "energy_field",
+      "primitive": "sphere",
+      "materialRef": "energy",
+      "structure": {
+        "type": "radial",
+        "count": 16,
+        "radius": 25
+      },
+      "transform": {
+        "position": [0, 10, 0],
+        "scale": [1, 1, 1]
+      }
+    },
+    {
+      "id": "crystal_grid_floor",
+      "primitive": "cube",
+      "materialRef": "crystal",
+      "structure": {
+        "type": "grid",
+        "columns": 10,
+        "rows": 10,
+        "spacing": 5
+      },
+      "transform": {
+        "position": [-22.5, 0.5, -22.5],
+        "scale": [1, 1, 1]
+      }
+    },
+    {
+      "id": "energy_beam",
+      "primitive": "cylinder",
+      "materialRef": "energy",
+      "structure": {
+        "type": "line",
+        "count": 20,
+        "spacing": 1.5,
+        "direction": [0, 1, 0]
+      },
+      "transform": {
+        "position": [30, 0, 0],
+        "scale": [0.2, 3, 0.2]
+      }
+    }
+  ]
+}

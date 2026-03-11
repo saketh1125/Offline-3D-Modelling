@@ -1,4 +1,4 @@
-﻿/// Protocol version and type-safe enums for the Flutter ↔ Unity wire format.
+/// Protocol version and type-safe enums for the Flutter ↔ Unity wire format.
 ///
 /// All commands sent to Unity and events received from Unity must use
 /// these constant values. Unknown commands or events must be rejected.
@@ -14,7 +14,6 @@ class ProtocolVersion {
 
 /// Commands sent from Flutter → Unity.
 enum EngineCommand {
-  initialize('initialize'),
   loadScene('load_scene'),
   clearScene('clear_scene'),
   dispose('dispose');
@@ -35,7 +34,7 @@ enum EngineCommand {
 
 /// Events received from Unity → Flutter.
 enum EngineEventType {
-  initialized('initialized'),
+  unityReady('unity_ready'),
   sceneLoading('scene_loading'),
   sceneReady('scene_ready'),
   error('error'),

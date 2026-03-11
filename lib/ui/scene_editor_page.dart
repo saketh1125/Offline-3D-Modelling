@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:on_device_3d_builder/controllers/scene_controller.dart';
-import 'package:on_device_3d_builder/features/scene_host/engine_container.dart';
+import 'package:on_device_3d_builder/ui/pages/unity_viewer_page.dart';
 
+/// Page 1 — Scene Editor
+///
+/// Pure Flutter page with the JSON editor and a "Run" button.
+/// Unity is NOT loaded here — it only starts when navigating to the viewer.
 class SceneEditorPage extends StatefulWidget {
   final SceneController sceneController;
 
@@ -14,6 +18,7 @@ class SceneEditorPage extends StatefulWidget {
 class _SceneEditorPageState extends State<SceneEditorPage> {
   final TextEditingController _jsonController = TextEditingController(
     text: '''{
+  "schema_version": "1.0",
   "materials":[
     {"id":"red","baseColor":[1,0,0]}
   ],
@@ -38,9 +43,30 @@ class _SceneEditorPageState extends State<SceneEditorPage> {
     super.dispose();
   }
 
-  void _onGeneratePressed() {
-    FocusScope.of(context).unfocus(); // Dismiss keyboard if open
-    widget.sceneController.generateScene(_jsonController.text);
+  void _onRunPressed() {
+    FocusScope.of(context).unfocus();
+
+    final json = _jsonController.text.trim();
+    if (json.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please enter scene JSON before running.'),
+          backgroundColor: Colors.redAccent,
+        ),
+      );
+      return;
+    }
+
+    // Navigate to the Unity viewer page
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => UnityViewerPage(
+          sceneJson: json,
+          controller: widget.sceneController,
+        ),
+      ),
+    );
   }
 
   @override
@@ -52,93 +78,83 @@ class _SceneEditorPageState extends State<SceneEditorPage> {
         backgroundColor: const Color(0xFF1A1A22),
         elevation: 0,
       ),
-      body: Row(
-        children: [
-          // Left Side: Editor Area
-          Expanded(
-            flex: 1,
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  const Text(
-                    "Procedural Scene JSON",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  // Editor Text Field
-                  Expanded(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF1A1A22),
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(color: Colors.white24),
-                      ),
-                      padding: const EdgeInsets.all(12),
-                      child: TextField(
-                        controller: _jsonController,
-                        maxLines: null,
-                        expands: true,
-                        style: const TextStyle(
-                          color: Colors.greenAccent,
-                          fontFamily: 'monospace',
-                          fontSize: 14,
-                        ),
-                        decoration: const InputDecoration(
-                          border: InputBorder.none,
-                          hintText: 'Paste scene JSON here...',
-                          hintStyle: TextStyle(color: Colors.white30),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  ValueListenableBuilder<bool>(
-                    valueListenable: widget.sceneController.isReady,
-                    builder: (context, isReady, child) {
-                      return ElevatedButton.icon(
-                        // Disable when engine is not initialized to prevent crashing
-                        onPressed: isReady ? _onGeneratePressed : null,
-                        icon: const Icon(Icons.code),
-                        label: Text(isReady
-                            ? 'Generate Scene'
-                            : 'Waiting for Unity Engine...'),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF5B6EF5),
-                          disabledBackgroundColor: const Color(0xFF5B6EF5)
-                              .withAlpha(128), // Faded out
-                          foregroundColor: Colors.white,
-                          disabledForegroundColor: Colors.white70,
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          textStyle: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ],
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // Title
+            const Text(
+              'Procedural Scene JSON',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
               ),
             ),
-          ),
-
-          const VerticalDivider(width: 1, color: Colors.white24),
-
-          // Right Side: Unity Engine Container
-          const Expanded(
-            flex: 1,
-            child: Padding(
-              padding: EdgeInsets.all(16.0),
-              child: EngineContainer(stateLabel: 'READY', lastEvent: null),
+            const SizedBox(height: 4),
+            const Text(
+              'Edit your scene definition below, then tap Run to view it in the Unity engine.',
+              style: TextStyle(color: Colors.white38, fontSize: 13),
             ),
-          ),
-        ],
+            const SizedBox(height: 16),
+
+            // JSON Editor
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: const Color(0xFF1A1A22),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: Colors.white12),
+                ),
+                padding: const EdgeInsets.all(12),
+                child: Scrollbar(
+                  child: SingleChildScrollView(
+                    child: TextField(
+                      controller: _jsonController,
+                      keyboardType: TextInputType.multiline,
+                      maxLines: null,
+                      style: const TextStyle(
+                        color: Colors.greenAccent,
+                        fontFamily: 'monospace',
+                        fontSize: 14,
+                        height: 1.5,
+                      ),
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        hintText: 'Paste scene JSON here...',
+                        hintStyle: TextStyle(color: Colors.white30),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 16),
+
+            // Run Button
+            SizedBox(
+              height: 56,
+              child: ElevatedButton.icon(
+                onPressed: _onRunPressed,
+                icon: const Icon(Icons.play_arrow_rounded, size: 28),
+                label: const Text('Run Scene'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF5B6EF5),
+                  foregroundColor: Colors.white,
+                  textStyle: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

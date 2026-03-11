@@ -43,9 +43,13 @@ namespace ThreeDBuilder.Scene
             }
 
             // Validation: materials list
-            if (model.materials == null)
+            if (model.materials == null || model.materials.Count == 0)
             {
-                throw new Exception("ParseScene: Validation failed - 'materials' list is null.");
+                model.materials = new System.Collections.Generic.List<MaterialModel>();
+                model.materials.Add(new MaterialModel{
+                    id = "default",
+                    baseColor = new float[]{0.8f,0.8f,0.8f}
+                });
             }
 
             // Validation: objects list
@@ -59,7 +63,7 @@ namespace ThreeDBuilder.Scene
             {
                 if (string.IsNullOrWhiteSpace(obj.materialRef))
                 {
-                    throw new Exception($"ParseScene: Validation failed - ObjectModel '{obj.id}' is missing a 'materialRef'.");
+                    obj.materialRef = "default";
                 }
             }
 

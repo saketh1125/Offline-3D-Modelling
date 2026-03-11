@@ -1,0 +1,89 @@
+{
+  "schema_version": "1.0",
+  "environment": {
+    "skybox": {
+      "type": "procedural",
+      "sunSize": 0.04,
+      "atmosphereThickness": 0.8,
+      "skyTint": [0.7, 0.8, 0.9],
+      "groundColor": [0.3, 0.25, 0.2]
+    },
+    "fog": {
+      "enabled": true,
+      "mode": "linear",
+      "start": 50,
+      "end": 150,
+      "color": [0.7, 0.75, 0.8]
+    },
+    "ground": {
+      "enabled": true,
+      "size": [100, 1, 100],
+      "color": [0.3, 0.28, 0.25],
+      "metallic": 0.0,
+      "glossiness": 0.1
+    },
+    "backgroundColor": [0.1, 0.2, 0.3]
+  },
+  "lighting": {
+    "preset": "outdoor"
+  },
+  "sceneTemplate": {
+    "type": "temple",
+    "parameters": {
+      "radius": 20,
+      "pillars": 16
+    }
+  },
+  "materials": [
+    {
+      "id": "stone",
+      "baseColor": [0.5, 0.5, 0.55]
+    },
+    {
+      "id": "marble",
+      "baseColor": [0.95, 0.95, 0.9]
+    },
+    {
+      "id": "tile",
+      "baseColor": [0.8, 0.3, 0.2]
+    },
+    {
+      "id": "gold",
+      "baseColor": [1.0, 0.85, 0.3]
+    }
+  ],
+  "objects": [
+    {
+      "id": "temple_floor",
+      "primitive": "cylinder",
+      "materialRef": "stone",
+      "transform": {
+        "position": [0, 0, 0],
+        "scale": [40, 0.5, 40]
+      }
+    },
+    {
+      "id": "altar",
+      "primitive": "cube",
+      "materialRef": "gold",
+      "transform": {
+        "position": [0, 1, 0],
+        "scale": [3, 2, 3]
+      }
+    },
+    {
+      "id": "decorative_columns",
+      "primitive": "cylinder",
+      "materialRef": "marble",
+      "structure": {
+        "type": "circle",
+        "count": 8,
+        "radius": 8
+      },
+      "transform": {
+        "position": [0, 0.5, 0],
+        "scale": [0.3, 3, 0.3]
+      }
+    }
+  ]
+}
